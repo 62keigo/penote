@@ -1,0 +1,1970 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plant Engineer's Notebook | プラントエンジニアの知恵袋</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Maru+Gothic:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Markdown Parser -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { beige: '#F9F5F0', brown: '#8C705F', dark: '#4A4238', green: '#7A9D96', accent: '#D4A373', white: '#FFFFFF' }
+                    },
+                    fontFamily: {
+                        serif: ['"Shippori Mincho"', 'serif'],
+                        sans: ['"Zen Maru Gothic"', 'sans-serif'],
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'fade-in-up': 'fadeInUp 0.8s ease-out forwards',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        float: { '0%, 100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-10px)' } },
+                        fadeInUp: { '0%': { opacity: '0', transform: 'translateY(20px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Zen Maru Gothic', sans-serif; background-color: #F9F5F0; color: #4A4238; line-height: 1.8; }
+        .glass-card { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.5); box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05); }
+        .tab-active { background-color: #7A9D96; color: white; transform: translateY(-2px); }
+        .scroll-reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s cubic-bezier(0.5, 0, 0, 1); }
+        .scroll-reveal.visible { opacity: 1; transform: translateY(0); }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #F9F5F0; }
+        ::-webkit-scrollbar-thumb { background: #D4A373; border-radius: 4px; }
+        .markdown-body p { margin-bottom: 1em; }
+        /* Skill Popup Animation */
+        .skill-popup { animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        @keyframes popIn { from { opacity: 0; transform: scale(0.8) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 transition-all duration-300 py-4 px-6" id="navbar">
+        <div class="max-w-7xl mx-auto flex justify-between items-center glass-card rounded-full px-6 py-3">
+            <div class="text-xl font-serif font-bold tracking-wider text-brand-brown flex items-center gap-2"><i class="fa-solid fa-industry"></i> PE.Note</div>
+            <div class="hidden md:flex gap-8 text-sm font-medium text-brand-dark">
+                <a href="#about" class="hover:text-brand-accent transition-colors">プラントエンジニアとは</a>
+                <a href="#workflow" class="hover:text-brand-accent transition-colors">仕事の流れ</a>
+                <a href="#ai-tools" class="hover:text-brand-accent transition-colors text-brand-accent"><i class="fa-solid fa-wand-magic-sparkles"></i> AIツール</a>
+                <a href="#skills" class="hover:text-brand-accent transition-colors">必要スキル</a>
+            </div>
+            <button class="md:hidden text-brand-brown text-xl" onclick="toggleMobileMenu()"><i class="fa-solid fa-bars"></i></button>
+        </div>
+        <div id="mobile-menu" class="hidden absolute top-20 left-6 right-6 glass-card rounded-2xl p-6 flex flex-col gap-4 md:hidden text-center">
+            <a href="#about" onclick="toggleMobileMenu()">プラントエンジニアとは</a>
+            <a href="#workflow" onclick="toggleMobileMenu()">仕事の流れ</a>
+            <a href="#ai-tools" onclick="toggleMobileMenu()">AIツール</a>
+            <a href="#skills" onclick="toggleMobileMenu()">必要スキル</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
+        <!-- Background Image (Unsplash) -->
+        <div class="absolute inset-0 z-0">
+            <img src="https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" alt="Plant Engineer with drawings at site" class="w-full h-full object-cover object-center">
+            
+            <div class="absolute inset-0 bg-black/40"></div>
+            <div class="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-brand-beige/90"></div>
+        </div>
+
+        <!-- 装飾エフェクト -->
+        <div class="absolute top-[-10%] left-[-5%] w-[500px] h-[500px] bg-brand-green/20 rounded-full blur-3xl animate-float mix-blend-overlay z-0 pointer-events-none"></div>
+        <div class="absolute bottom-[-10%] right-[-5%] w-[600px] h-[600px] bg-brand-accent/20 rounded-full blur-3xl animate-float mix-blend-overlay z-0 pointer-events-none" style="animation-delay: -3s;"></div>
+
+        <div class="relative z-10 max-w-4xl mx-auto text-center px-6 py-16 md:py-24"> 
+            <p class="text-white tracking-[0.2em] mb-8 text-sm md:text-base animate-fade-in-up font-bold bg-black/20 inline-block px-6 py-2 rounded-full backdrop-blur-sm border border-white/30 drop-shadow-md">産業の動脈をつくる仕事</p> 
+            
+            <h1 class="text-4xl md:text-6xl font-serif font-bold text-white leading-tight mb-12 animate-fade-in-up drop-shadow-xl" style="animation-delay: 0.2s;">
+                世界を動かす<br>
+                <span class="text-brand-green drop-shadow-lg" style="text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);">巨大な工場</span>の創造主
+            </h1>
+            
+            <p class="text-white/95 max-w-2xl mx-auto mb-16 animate-fade-in-up leading-loose font-medium drop-shadow-md text-lg" style="animation-delay: 0.4s; text-shadow: 0 1px 2px rgba(0,0,0,0.5);">
+                プラントエンジニアは、エネルギーや製品を生み出す生産設備（プラント）の<br class="hidden md:block">
+                設計から建設、そして日々の安全を守るメンテナンスまでを一貫して担う専門家です。
+            </p>
+            
+            <a href="#about" class="inline-block bg-brand-brown text-white px-10 py-4 rounded-full hover:bg-brand-dark transition-all transform hover:scale-105 shadow-lg animate-fade-in-up text-lg border border-white/20 backdrop-blur-sm" style="animation-delay: 0.6s;">
+                もっと詳しく知る <i class="fa-solid fa-arrow-down ml-2"></i>
+            </a>
+        </div>
+    </header>
+
+    <!-- About Section -->
+    <section id="about" class="py-20 px-6">
+        <div class="max-w-6xl mx-auto">
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div class="scroll-reveal">
+                    <div class="relative">
+                        <div class="absolute -inset-4 bg-brand-accent/20 rounded-full blur-xl"></div>
+                        <img src="https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Plant Engineering" class="relative rounded-2xl shadow-2xl w-full object-cover h-[400px] grayscale hover:grayscale-0 transition-all duration-700">
+                    </div>
+                </div>
+                <div class="scroll-reveal">
+                    <h2 class="text-3xl font-serif font-bold text-brand-dark mb-6 border-b-2 border-brand-green/30 inline-block pb-2">何をする人たち？</h2>
+                    <p class="mb-6 text-lg leading-relaxed">「プラント」とは、発電所、化学工場、製鉄所、水処理施設などの巨大な生産設備のこと。これらを<span class="font-bold text-brand-green">ゼロから作り上げ、動かし続ける</span>のがプラントエンジニアの使命です。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Workflow Section -->
+    <section id="workflow" class="py-20 px-6 bg-white/50 relative">
+        <div class="max-w-5xl mx-auto">
+            <div class="text-center mb-12 scroll-reveal">
+                <span class="text-brand-brown font-bold tracking-widest text-sm">THE FLOW</span>
+                <h2 class="text-3xl font-serif font-bold text-brand-dark mt-2">プロジェクトの流れ (EPCM)</h2>
+                <p class="text-brand-dark/70 mt-4">プラントエンジニアリングは、大きく分けて4つのフェーズで進行します。</p>
+            </div>
+            <div class="flex flex-wrap justify-center gap-4 mb-8 scroll-reveal">
+                <button onclick="switchTab('design')" id="tab-design" class="tab-btn px-6 py-3 rounded-full bg-white shadow-sm hover:bg-brand-beige transition-all duration-300 font-bold text-brand-dark border border-transparent tab-active"><i class="fa-solid fa-pen-ruler mr-2"></i>設計 (Engineering)</button>
+                <button onclick="switchTab('procurement')" id="tab-procurement" class="tab-btn px-6 py-3 rounded-full bg-white shadow-sm hover:bg-brand-beige transition-all duration-300 font-bold text-brand-dark border border-transparent"><i class="fa-solid fa-truck-fast mr-2"></i>調達 (Procurement)</button>
+                <button onclick="switchTab('construction')" id="tab-construction" class="tab-btn px-6 py-3 rounded-full bg-white shadow-sm hover:bg-brand-beige transition-all duration-300 font-bold text-brand-dark border border-transparent"><i class="fa-solid fa-helmet-safety mr-2"></i>建設 (Construction)</button>
+                <button onclick="switchTab('maintenance')" id="tab-maintenance" class="tab-btn px-6 py-3 rounded-full bg-white shadow-sm hover:bg-brand-beige transition-all duration-300 font-bold text-brand-dark border border-transparent"><i class="fa-solid fa-wrench mr-2"></i>保全 (Maintenance)</button>
+            </div>
+
+            <!-- Tab Contents (min-h-800px) -->
+            <div class="relative min-h-[800px] glass-card rounded-3xl p-8 md:p-12 shadow-xl scroll-reveal overflow-hidden">
+                
+                <!-- 1. Design Tab -->
+                <div id="content-design" class="tab-content transition-all duration-500">
+                    <div class="mb-8 relative rounded-3xl overflow-hidden shadow-md group">
+                        <img src="https://images.unsplash.com/photo-1581094794329-c8112a89af12?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" alt="Engineering Design" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                        <div class="absolute inset-0 bg-gradient-to-r from-white via-white/90 to-transparent"></div>
+                        <div class="relative p-8 md:p-10 max-w-3xl">
+                            <div class="flex items-center gap-3 mb-3">
+                                <span class="inline-block w-8 h-1 bg-brand-green rounded-full"></span>
+                                <span class="text-brand-green font-bold tracking-widest text-xs">PHASE 01</span>
+                            </div>
+                            <h3 class="text-3xl md:text-4xl font-serif font-bold text-brand-dark mb-4">基本・詳細設計 (Engineering)</h3>
+                            <p class="text-brand-dark/80 leading-relaxed font-medium">
+                                プラント設計は、物質収支などを計算する「プロセス設計」から始まり、徐々に具現化・詳細化されていきます。<br>
+                                各カードをクリックして、詳細フローをご覧ください。
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div id="design-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 transition-all duration-500"></div>
+
+                    <div id="design-detail-container" class="hidden opacity-0 transform translate-x-10 transition-all duration-500 absolute top-0 left-0 w-full h-full bg-white z-10 p-8 overflow-y-auto">
+                        <button onclick="closeDesignDetail()" class="mb-6 flex items-center text-brand-green hover:text-brand-dark transition-colors font-bold text-sm">
+                            <i class="fa-solid fa-arrow-left mr-2"></i> 一覧に戻る
+                        </button>
+                        <div id="detail-content"></div>
+                    </div>
+
+                    <!-- Simulation Detail View -->
+                    <div id="simulation-detail-container" class="hidden opacity-0 transform translate-x-10 transition-all duration-500 absolute top-0 left-0 w-full h-full bg-brand-beige/95 z-20 p-4 md:p-8 overflow-y-auto">
+                        <div class="max-w-6xl mx-auto">
+                            <button onclick="closeSimulationDetail()" class="mb-6 flex items-center text-brand-green hover:text-brand-dark transition-colors font-bold text-sm bg-white px-4 py-2 rounded-full shadow-sm">
+                                <i class="fa-solid fa-arrow-left mr-2"></i> プロセス設計フローに戻る
+                            </button>
+                            <div class="text-center mb-12">
+                                <span class="text-brand-green font-bold tracking-widest text-sm">DEEP DIVE</span>
+                                <h2 class="text-3xl font-serif font-bold text-brand-dark mt-2">プロセスシミュレーションの基礎</h2>
+                            </div>
+                            <div id="simulation-grid" class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12"></div>
+                        </div>
+                    </div>
+
+                    <!-- Deep Dive Containers -->
+                    <div id="simulation-deep-dive-container" class="hidden opacity-0 transform translate-x-10 transition-all duration-500 absolute top-0 left-0 w-full h-full bg-brand-beige z-30 overflow-y-auto">
+                        <div class="sticky top-0 bg-brand-beige/95 backdrop-blur-sm border-b border-brand-dark/10 px-6 py-4 flex items-center justify-between z-40">
+                            <button onclick="closeSimulationDeepDive()" class="flex items-center text-brand-dark hover:text-brand-green transition-colors font-bold text-sm bg-white px-4 py-2 rounded-full shadow-sm">
+                                <i class="fa-solid fa-arrow-left mr-2"></i> プロセス設計一覧に戻る
+                            </button>
+                            <h2 class="text-lg font-serif font-bold text-brand-dark hidden md:block">Simulation Deep Dive</h2>
+                        </div>
+                        <div id="simulation-deep-dive-content" class="max-w-5xl mx-auto p-6 md:p-12 pb-24"></div>
+                    </div>
+
+                    <div id="civil-deep-dive-container" class="hidden opacity-0 transform translate-x-10 transition-all duration-500 absolute top-0 left-0 w-full h-full bg-brand-beige z-30 overflow-y-auto">
+                        <div class="sticky top-0 bg-brand-beige/95 backdrop-blur-sm border-b border-brand-dark/10 px-6 py-4 flex items-center justify-between z-40">
+                            <button onclick="closeCivilDeepDive()" class="flex items-center text-brand-dark hover:text-brand-green transition-colors font-bold text-sm bg-white px-4 py-2 rounded-full shadow-sm">
+                                <i class="fa-solid fa-arrow-left mr-2"></i> 土木・建築フローに戻る
+                            </button>
+                            <h2 class="text-lg font-serif font-bold text-brand-dark hidden md:block">Civil Engineering Deep Dive</h2>
+                        </div>
+                        <div id="civil-deep-dive-content" class="max-w-5xl mx-auto p-6 md:p-12 pb-24"></div>
+                    </div>
+
+                    <div id="layout-deep-dive-container" class="hidden opacity-0 transform translate-x-10 transition-all duration-500 absolute top-0 left-0 w-full h-full bg-brand-beige z-30 overflow-y-auto">
+                        <div class="sticky top-0 bg-brand-beige/95 backdrop-blur-sm border-b border-brand-dark/10 px-6 py-4 flex items-center justify-between z-40">
+                            <button onclick="closeLayoutDeepDive()" class="flex items-center text-brand-dark hover:text-brand-green transition-colors font-bold text-sm bg-white px-4 py-2 rounded-full shadow-sm">
+                                <i class="fa-solid fa-arrow-left mr-2"></i> 機器レイアウトフローに戻る
+                            </button>
+                            <h2 class="text-lg font-serif font-bold text-brand-dark hidden md:block">Layout Design Deep Dive</h2>
+                        </div>
+                        <div id="layout-deep-dive-content" class="max-w-5xl mx-auto p-6 md:p-12 pb-24"></div>
+                    </div>
+
+                    <div id="mechanical-deep-dive-container" class="hidden opacity-0 transform translate-x-10 transition-all duration-500 absolute top-0 left-0 w-full h-full bg-brand-beige z-30 overflow-y-auto">
+                        <div class="sticky top-0 bg-brand-beige/95 backdrop-blur-sm border-b border-brand-dark/10 px-6 py-4 flex items-center justify-between z-40">
+                            <button onclick="closeMechanicalDeepDive()" class="flex items-center text-brand-dark hover:text-brand-green transition-colors font-bold text-sm bg-white px-4 py-2 rounded-full shadow-sm">
+                                <i class="fa-solid fa-arrow-left mr-2"></i> 機械設計フローに戻る
+                            </button>
+                            <h2 class="text-lg font-serif font-bold text-brand-dark hidden md:block">Mechanical Design Deep Dive</h2>
+                        </div>
+                        <div id="mechanical-deep-dive-content" class="max-w-5xl mx-auto p-6 md:p-12 pb-24"></div>
+                    </div>
+
+                    <div id="electrical-deep-dive-container" class="hidden opacity-0 transform translate-x-10 transition-all duration-500 absolute top-0 left-0 w-full h-full bg-brand-beige z-30 overflow-y-auto">
+                        <div class="sticky top-0 bg-brand-beige/95 backdrop-blur-sm border-b border-brand-dark/10 px-6 py-4 flex items-center justify-between z-40">
+                            <button onclick="closeElectricalDeepDive()" class="flex items-center text-brand-dark hover:text-brand-green transition-colors font-bold text-sm bg-white px-4 py-2 rounded-full shadow-sm">
+                                <i class="fa-solid fa-arrow-left mr-2"></i> 電気設計フローに戻る
+                            </button>
+                            <h2 class="text-lg font-serif font-bold text-brand-dark hidden md:block">Electrical Design Deep Dive</h2>
+                        </div>
+                        <div id="electrical-deep-dive-content" class="max-w-5xl mx-auto p-6 md:p-12 pb-24"></div>
+                    </div>
+
+                    <!-- Instrument Deep Dive Container -->
+                    <div id="instrument-deep-dive-container" class="hidden opacity-0 transform translate-x-10 transition-all duration-500 absolute top-0 left-0 w-full h-full bg-brand-beige z-30 overflow-y-auto">
+                        <div class="sticky top-0 bg-brand-beige/95 backdrop-blur-sm border-b border-brand-dark/10 px-6 py-4 flex items-center justify-between z-40">
+                            <button onclick="closeInstrumentDeepDive()" class="flex items-center text-brand-dark hover:text-brand-green transition-colors font-bold text-sm bg-white px-4 py-2 rounded-full shadow-sm">
+                                <i class="fa-solid fa-arrow-left mr-2"></i> 計装制御フローに戻る
+                            </button>
+                            <h2 class="text-lg font-serif font-bold text-brand-dark hidden md:block">Instrument Design Deep Dive</h2>
+                        </div>
+                        <div id="instrument-deep-dive-content" class="max-w-5xl mx-auto p-6 md:p-12 pb-24"></div>
+                    </div>
+                </div>
+
+                
+                <!-- 2. Procurement Tab -->
+                <div id="content-procurement" class="tab-content hidden transition-all duration-500">
+                    <div class="mb-8 relative rounded-3xl overflow-hidden shadow-md group">
+                        <img src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" alt="Procurement Logistics" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                        <div class="absolute inset-0 bg-gradient-to-r from-white via-white/90 to-transparent"></div>
+                        <div class="relative p-8 md:p-10 max-w-3xl">
+                            <div class="flex items-center gap-3 mb-3">
+                                <span class="inline-block w-8 h-1 bg-brand-accent rounded-full"></span>
+                                <span class="text-brand-accent font-bold tracking-widest text-xs">PHASE 02</span>
+                            </div>
+                            <h3 class="text-3xl md:text-4xl font-serif font-bold text-brand-dark mb-4">機材調達・物流 (Procurement)</h3>
+                            <p class="text-brand-dark/80 leading-relaxed font-medium">
+                                「買う」だけではない。世界中の工場から、仕様通りの製品を納期通りに現場へ届ける兵站（ロジスティクス）管理です。
+                            </p>
+                        </div>
+                    </div>
+
+                    <div id="procurement-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 transition-all duration-500"></div>
+                    <div id="procurement-detail-container" class="hidden opacity-0 transform translate-x-10 transition-all duration-500 absolute top-0 left-0 w-full h-full bg-white z-10 p-8 overflow-y-auto">
+                        <button onclick="closeProcurementDetail()" class="mb-6 flex items-center text-brand-accent hover:text-brand-brown transition-colors font-bold text-sm">
+                            <i class="fa-solid fa-arrow-left mr-2"></i> 一覧に戻る
+                        </button>
+                        <div id="procurement-detail-content"></div>
+                    </div>
+                </div>
+
+                <!-- 3. Construction Tab -->
+                <div id="content-construction" class="tab-content hidden transition-all duration-500">
+                    <div class="mb-8 relative rounded-3xl overflow-hidden shadow-md group">
+                        <img src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" alt="Construction Site" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                        <div class="absolute inset-0 bg-gradient-to-r from-white via-white/90 to-transparent"></div>
+                        <div class="relative p-8 md:p-10 max-w-3xl">
+                            <div class="flex items-center gap-3 mb-3">
+                                <span class="inline-block w-8 h-1 bg-brand-brown rounded-full"></span>
+                                <span class="text-brand-brown font-bold tracking-widest text-xs">PHASE 03</span>
+                            </div>
+                            <h3 class="text-3xl md:text-4xl font-serif font-bold text-brand-brown mb-4">建設工事 (Construction)</h3>
+                            <p class="text-brand-dark/80 leading-relaxed font-medium">
+                                何もない荒野に巨大なプラントが出現します。土木から配管、そして試運転（コミッショニング）まで、多職種が連携するプロジェクトのクライマックスです。
+                            </p>
+                        </div>
+                    </div>
+
+                    <div id="construction-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 transition-all duration-500"></div>
+                    <div id="construction-detail-container" class="hidden opacity-0 transform translate-x-10 transition-all duration-500 absolute top-0 left-0 w-full h-full bg-white z-10 p-8 overflow-y-auto">
+                        <button onclick="closeConstructionDetail()" class="mb-6 flex items-center text-brand-brown hover:text-brand-dark transition-colors font-bold text-sm">
+                            <i class="fa-solid fa-arrow-left mr-2"></i> 一覧に戻る
+                        </button>
+                        <div id="construction-detail-content"></div>
+                    </div>
+                </div>
+
+                <!-- 4. Maintenance Tab -->
+                <div id="content-maintenance" class="tab-content hidden transition-all duration-500">
+                    <div class="mb-8 relative rounded-3xl overflow-hidden shadow-md group">
+                        <img src="https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" alt="Maintenance Inspection" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                        <div class="absolute inset-0 bg-gradient-to-r from-white via-white/90 to-transparent"></div>
+                        <div class="relative p-8 md:p-10 max-w-3xl">
+                            <div class="flex items-center gap-3 mb-3">
+                                <span class="inline-block w-8 h-1 bg-brand-dark rounded-full"></span>
+                                <span class="text-brand-dark font-bold tracking-widest text-xs">PHASE 04</span>
+                            </div>
+                            <h3 class="text-3xl md:text-4xl font-serif font-bold text-brand-dark mb-4">運転・保全 (O&M)</h3>
+                            <p class="text-brand-dark/80 leading-relaxed font-medium">
+                                完成は終わりではなく始まり。予防保全(PM)や定期修理(SDM)に加え、最新のDX技術で安全と稼働率を最大化します。
+                            </p>
+                        </div>
+                    </div>
+
+                    <div id="maintenance-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 transition-all duration-500"></div>
+                    <div id="maintenance-detail-container" class="hidden opacity-0 transform translate-x-10 transition-all duration-500 absolute top-0 left-0 w-full h-full bg-white z-10 p-8 overflow-y-auto">
+                        <button onclick="closeMaintenanceDetail()" class="mb-6 flex items-center text-brand-dark hover:text-brand-green transition-colors font-bold text-sm">
+                            <i class="fa-solid fa-arrow-left mr-2"></i> 一覧に戻る
+                        </button>
+                        <div id="maintenance-detail-content"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- AI & Skills -->
+    <section id="ai-tools" class="py-20 px-6 relative overflow-hidden">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-16 scroll-reveal">
+                <h2 class="text-3xl font-serif font-bold text-brand-dark">AIアシスタント・ツール</h2>
+            </div>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="glass-card p-8 rounded-3xl shadow-lg border border-brand-green/20">
+                    <h3 class="text-xl font-bold text-brand-dark mb-4">専門用語「超」翻訳機</h3>
+                    <input type="text" id="term-input" placeholder="例：HAZOP" class="w-full px-4 py-3 rounded-xl border border-brand-green/30 bg-white/50 mb-4">
+                    <button onclick="explainTerm()" id="term-btn" class="w-full py-3 bg-brand-green text-white rounded-xl font-bold">✨ 解説を作成する</button>
+                    <div id="term-result" class="hidden mt-6 p-4 bg-white/60 rounded-xl"></div>
+                </div>
+                <div class="glass-card p-8 rounded-3xl shadow-lg border border-brand-accent/20">
+                    <h3 class="text-xl font-bold text-brand-dark mb-4">プラント適職診断</h3>
+                    <textarea id="career-input" rows="2" placeholder="例：旅行が好き。" class="w-full px-4 py-3 rounded-xl border border-brand-accent/30 bg-white/50 mb-4"></textarea>
+                    <button onclick="suggestCareer()" id="career-btn" class="w-full py-3 bg-brand-accent text-white rounded-xl font-bold">✨ 適職を診断する</button>
+                    <div id="career-result" class="hidden mt-6 p-4 bg-white/60 rounded-xl"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="skills" class="py-20 px-6 bg-brand-beige/30">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-16 scroll-reveal">
+                <h2 class="text-3xl font-serif font-bold text-brand-dark">キャリアアップのための資格マップ</h2>
+                <p class="text-brand-dark/70 mt-4">プラントエンジニアとしての市場価値を高める、推奨資格リスト。</p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-8 scroll-reveal">
+                <!-- 1. プラント基礎・保安 -->
+                <div class="bg-white p-8 rounded-3xl shadow-sm border border-brand-green/20 hover:shadow-md transition-shadow">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-10 h-10 rounded-full bg-brand-green/10 flex items-center justify-center text-brand-green"><i class="fa-solid fa-shield-halved"></i></div>
+                        <h3 class="text-xl font-bold text-brand-dark">基礎・保安系</h3>
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        <span onclick="showSkillInfo(this)" class="skill-tag cursor-pointer px-3 py-1.5 bg-brand-green/10 text-brand-green hover:bg-brand-green hover:text-white transition-colors rounded-lg text-sm font-bold" title="プラント運転・管理に必須の国家資格。甲種は難関。">高圧ガス製造保安責任者</span>
+                        <span onclick="showSkillInfo(this)" class="skill-tag cursor-pointer px-3 py-1.5 bg-brand-green/10 text-brand-green hover:bg-brand-green hover:text-white transition-colors rounded-lg text-sm font-bold" title="化学プラント等で必須。まずは乙4、目指せ甲種。">危険物取扱者</span>
+                        <span onclick="showSkillInfo(this)" class="skill-tag cursor-pointer px-3 py-1.5 bg-brand-green/10 text-brand-green hover:bg-brand-green hover:text-white transition-colors rounded-lg text-sm font-bold" title="消防設備の点検・整備に必要。">消防設備士</span>
+                        <span onclick="showSkillInfo(this)" class="skill-tag cursor-pointer px-3 py-1.5 bg-brand-green/10 text-brand-green hover:bg-brand-green hover:text-white transition-colors rounded-lg text-sm font-bold" title="労働安全衛生法に基づく資格。現場管理に重要。">衛生管理者</span>
+                    </div>
+                </div>
+
+                <!-- 2. 専門技術スペシャリスト -->
+                <div class="bg-white p-8 rounded-3xl shadow-sm border border-brand-brown/20 hover:shadow-md transition-shadow">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-10 h-10 rounded-full bg-brand-brown/10 flex items-center justify-center text-brand-brown"><i class="fa-solid fa-bolt"></i></div>
+                        <h3 class="text-xl font-bold text-brand-dark">専門技術系</h3>
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        <span onclick="showSkillInfo(this)" class="skill-tag cursor-pointer px-3 py-1.5 bg-brand-brown/10 text-brand-brown hover:bg-brand-brown hover:text-white transition-colors rounded-lg text-sm font-bold" title="省エネ法対応のキーマン。熱・電気分野あり。">エネルギー管理士</span>
+                        <span onclick="showSkillInfo(this)" class="skill-tag cursor-pointer px-3 py-1.5 bg-brand-brown/10 text-brand-brown hover:bg-brand-brown hover:text-white transition-colors rounded-lg text-sm font-bold" title="電気設備の保安監督。独占業務ありの強力な資格。">電気主任技術者</span>
+                        <span onclick="showSkillInfo(this)" class="skill-tag cursor-pointer px-3 py-1.5 bg-brand-brown/10 text-brand-brown hover:bg-brand-brown hover:text-white transition-colors rounded-lg text-sm font-bold" title="環境コンプライアンスの守護神。大気・水質など。">公害防止管理者</span>
+                        <span onclick="showSkillInfo(this)" class="skill-tag cursor-pointer px-3 py-1.5 bg-brand-brown/10 text-brand-brown hover:bg-brand-brown hover:text-white transition-colors rounded-lg text-sm font-bold" title="建設工事の施工管理を行う国家資格。">1級管工事施工管理技士</span>
+                    </div>
+                </div>
+
+                <!-- 3. 上級エンジニア・マネジメント -->
+                <div class="bg-white p-8 rounded-3xl shadow-sm border border-brand-accent/20 hover:shadow-md transition-shadow">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-10 h-10 rounded-full bg-brand-accent/10 flex items-center justify-center text-brand-accent"><i class="fa-solid fa-briefcase"></i></div>
+                        <h3 class="text-xl font-bold text-brand-dark">上級・マネジメント</h3>
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        <span onclick="showSkillInfo(this)" class="skill-tag cursor-pointer px-3 py-1.5 bg-brand-accent/10 text-brand-accent hover:bg-brand-accent hover:text-white transition-colors rounded-lg text-sm font-bold" title="科学技術系資格の最高峰。コンサル業務にも有利。">技術士 (PE)</span>
+                        <span onclick="showSkillInfo(this)" class="skill-tag cursor-pointer px-3 py-1.5 bg-brand-accent/10 text-brand-accent hover:bg-brand-accent hover:text-white transition-colors rounded-lg text-sm font-bold" title="世界標準のプロジェクトマネジメント資格。">PMP®</span>
+                        <span onclick="showSkillInfo(this)" class="skill-tag cursor-pointer px-3 py-1.5 bg-brand-accent/10 text-brand-accent hover:bg-brand-accent hover:text-white transition-colors rounded-lg text-sm font-bold" title="米国公認プロフェッショナルエンジニア。海外案件に。">米国PE</span>
+                        <span onclick="showSkillInfo(this)" class="skill-tag cursor-pointer px-3 py-1.5 bg-brand-accent/10 text-brand-accent hover:bg-brand-accent hover:text-white transition-colors rounded-lg text-sm font-bold" title="経営視点を持つエンジニアへ。">中小企業診断士</span>
+                    </div>
+                </div>
+
+                <!-- 4. グローバル・DX -->
+                <div class="bg-white p-8 rounded-3xl shadow-sm border border-brand-dark/20 hover:shadow-md transition-shadow">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-10 h-10 rounded-full bg-brand-dark/10 flex items-center justify-center text-brand-dark"><i class="fa-solid fa-globe"></i></div>
+                        <h3 class="text-xl font-bold text-brand-dark">グローバル・DX</h3>
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        <span onclick="showSkillInfo(this)" class="skill-tag cursor-pointer px-3 py-1.5 bg-brand-dark/10 text-brand-dark hover:bg-brand-dark hover:text-white transition-colors rounded-lg text-sm font-bold" title="海外ベンダーとの折衝に必須。最低730点、目標860点。">TOEIC L&R</span>
+                        <span onclick="showSkillInfo(this)" class="skill-tag cursor-pointer px-3 py-1.5 bg-brand-dark/10 text-brand-dark hover:bg-brand-dark hover:text-white transition-colors rounded-lg text-sm font-bold" title="プラントDXの基礎教養。">基本情報技術者</span>
+                        <span onclick="showSkillInfo(this)" class="skill-tag cursor-pointer px-3 py-1.5 bg-brand-dark/10 text-brand-dark hover:bg-brand-dark hover:text-white transition-colors rounded-lg text-sm font-bold" title="データを扱えるエンジニアは希少価値大。">Python / SQL</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-12 p-6 bg-white/50 rounded-2xl border border-brand-dark/5 text-center scroll-reveal">
+                <p class="text-sm text-brand-dark/60"><i class="fa-solid fa-circle-info mr-2"></i> 各タグをクリックすると、簡単な解説が表示されます。</p>
+            </div>
+
+            <div id="skill-toast" class="fixed bottom-8 left-1/2 -translate-x-1/2 bg-brand-dark/95 backdrop-blur text-white px-6 py-4 rounded-full shadow-2xl z-50 hidden flex items-center gap-4 transition-all duration-300 transform translate-y-10 opacity-0 border border-white/10">
+                <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center shrink-0"><i class="fa-solid fa-lightbulb text-brand-accent"></i></div>
+                <div>
+                    <div id="skill-toast-title" class="font-bold text-sm text-brand-accent mb-0.5"></div>
+                    <div id="skill-toast-desc" class="text-xs text-gray-200"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-brand-dark text-white/60 py-12 px-6 border-t border-white/10 text-center text-xs">&copy; 2023 Plant Engineer's Notebook.</footer>
+
+    <script>
+        // --- DATA Definitions ---
+        const designDetails = {
+            'process': {
+                title: '01. プロセス設計',
+                icon: 'fa-flask',
+                color: 'brand-green',
+                desc: 'プラントのDNAを決定する最重要フェーズ。シミュレーションから始まり、P&ID、安全設計、そして運転手順の確立まで、プラントの全生涯を見据えた設計を行います。',
+                steps: [
+                    {title:'シミュレーション', desc:'H&MB計算・最適化検討', action:'simulation'},
+                    {title:'PFD・UFD作成', desc:'プロセスフロー・用役計画', action:'pfd'},
+                    {title:'P&ID開発', desc:'配管・計装・制御の詳細化', action:'pid'},
+                    {title:'機器仕様決定', desc:'機器・安全弁・計器DS作成', action:'equipment'},
+                    {title:'安全・防災設計', desc:'HAZOP・SIL・フレア計算', action:'safety'},
+                    {title:'運転・制御設計', desc:'C&E図・運転要領書作成', action:'operation'}
+                ]
+            },
+            'layout': {
+                title: '02. 機器レイアウト',
+                icon: 'fa-map',
+                color: 'brand-dark',
+                desc: 'メンテナンス性、施工性、経済性、そして安全性を同時に満たす配置を追求。限られた土地を立体的に使いこなす空間の魔術師です。',
+                steps: [
+                    {title:'全体配置計画 (Zoning)', desc:'プロセスエリア、貯蔵エリア、管理エリア等のゾーニングと主動線の決定。', action: 'zoning'},
+                    {title:'プロットプラン (Plot Plan)', desc:'主要機器の配置決定。配管ルートやメンテナンススペースを考慮。', action: 'plot_plan'},
+                    {title:'3Dモデリング', desc:'干渉チェックと詳細設計。配管、ケーブルトレイ、操作架台を立体的に構築。', action: '3d_modeling'},
+                    {title:'安全性・操作性レビュー', desc:'3Dモデルを用いたVRレビューや、避難経路・消火活動アクセスの検証。', action: 'safety_review'}
+                ]
+            },
+            'mechanical': {
+                title: '03. 機械設計',
+                icon: 'fa-gears',
+                color: 'brand-dark',
+                desc: '高圧・高温に耐える強靭な機器を生み出す。プロセス要求仕様を基に、材料力学と法規を駆使して実際の「モノ」として設計します。',
+                steps: [
+                    {title:'型式選定・基本計画', desc:'反応器やポンプの形式（竪型/横型、遠心/容積など）をプロセス要求に基づき決定。', action: 'mech_type_selection'},
+                    {title:'データシート作成', desc:'設計圧力・温度、材質、腐食代などの詳細仕様を定義し、Datasheetを作成。', action: 'mech_datasheet'},
+                    {title:'強度・構造計算', desc:'ASMEやJISに基づき、胴板厚み、ノズル補強、耐震設計などの強度計算を実施。', action: 'mech_calculation'},
+                    {title:'購入仕様書作成 (MR)', desc:'技術要求事項、適用規格、塗装・断熱仕様などをまとめた引合図書を作成。', action: 'mech_requisition'},
+                    {title:'ベンダー技術評価 (TBE)', desc:'各メーカーからの見積提案を技術的に査定し、不適合がないか確認。', action: 'mech_tbe'},
+                    {title:'ベンダー図書チェック', desc:'承認用図面（General Arrangement, Detail Dwg）を詳細にレビュー。', action: 'mech_vendor_print'},
+                    {title:'溶接・材料管理', desc:'WPS/PQRの確認や、ミルシート（材料証明書）によるトレーサビリティ管理。', action: 'mech_weld_material'},
+                    {title:'検査・試験対応', desc:'ITP（検査計画書）の承認、工場での耐圧試験や性能試験への立会い。', action: 'mech_inspection'}
+                ]
+            },
+            'civil': {
+                title: '04. 土木・建築',
+                icon: 'fa-building',
+                color: 'brand-dark',
+                desc: '数千トンの重量物を支える縁の下の力持ち。地盤特性を読み解き、プラントを支える基礎と建屋を設計します。',
+                steps: [
+                    {title:'地盤調査・解析', desc:'ボーリング調査結果からN値や地下水位を把握し、杭種や基礎形式を選定。', action:'piling'},
+                    {title:'基礎・構造計算', desc:'機器荷重、地震荷重、風荷重に対する構造安定性を計算。'},
+                    {title:'躯体図・配筋図作成', desc:'コンクリート形状や鉄筋の配置を示した施工用図面の作成。'},
+                    {title:'建築確認申請', desc:'制御室や変電所などの建築物について、役所への許認可申請業務。'}
+                ]
+            },
+            'piping': {
+                title: '05. 配管設計',
+                icon: 'fa-route',
+                color: 'brand-dark',
+                desc: '複雑に入り組むパイプを美しく機能的に配置。流体の特性に応じた材料選定から、熱膨張を吸収する柔軟な設計まで。',
+                steps: [
+                    {title:'配管スペック選定', desc:'流体条件（圧力・温度・腐食性）に基づき、使用するパイプやバルブの材質・等級を定義。'},
+                    {title:'3Dルーティング・詳細化', desc:'3Dモデル上で配管ルートを設計。操作性やメンテナンス性を考慮。'},
+                    {title:'熱応力解析 (Stress Analysis)', desc:'温度変化による配管の伸縮をシミュレーションし、破損を防ぐ設計。'},
+                    {title:'サポート・架台設計', desc:'配管を支えるサポートの種類と位置を決定し、架台を設計。'}
+                ]
+            },
+            'electrical': {
+                title: '06. 電気設計',
+                icon: 'fa-bolt',
+                color: 'brand-dark',
+                desc: '巨大なエネルギーを安全に供給・配分する。受変電からモーターへの動力供給、照明や通信まで、プラントのインフラを構築します。',
+                steps: [
+                    {title:'電力負荷計算 (Load Calc)', desc:'ポンプやコンプレッサー等の電気容量を集計し、必要なトランス容量を算出。', action: 'elec_load_calc'},
+                    {title:'単線結線図作成 (SLD)', desc:'電力供給の全体像（受電→変圧→配電）を定義する最重要図面を作成。', action: 'elec_sld'},
+                    {title:'電気機器仕様決定', desc:'変圧器、スイッチギア、モーターコントロールセンター(MCC)の詳細スペックを決定。', action: 'elec_equipment_spec'},
+                    {title:'機器配置・ルート計画', desc:'電気室内の盤配置や、現場へのケーブルトレイ・埋設管のメインルートを計画。', action: 'elec_layout'},
+                    {title:'ケーブルスケジュール', desc:'数千本に及ぶケーブルのサイズ、始点・終点、敷設ルートをデータベース化。', action: 'elec_cable_schedule'},
+                    {title:'接地・防雷設計', desc:'感電防止や雷害対策のための接地システム（アース）と避雷針の配置設計。', action: 'elec_earthing'},
+                    {title:'照明・小勢力設計', desc:'夜間作業に必要な照度計算や、コンセント配置の設計。', action: 'elec_lighting'},
+                    {title:'通信・保安設備設計', desc:'ページングシステム、電話、ITネットワーク、監視カメラ等の弱電設計。', action: 'elec_telecom'}
+                ]
+            },
+            'instrument': {
+                title: '07. 計装制御',
+                icon: 'fa-gauge-high',
+                color: 'brand-dark',
+                desc: 'プラントの頭脳と神経を構築。温度・圧力などのセンサーから、自動制御システム(DCS)までを統合的に設計します。',
+                steps: [
+                    {title:'一般計器仕様決定', desc:'防爆構造、IP保護等級、電源仕様など、プロジェクト全体の計器設計基準を統一。', action: 'inst_general_spec'},
+                    {title:'流量・液面計選定', desc:'オリフィス、コリオリ、レーダーなど、測定原理を含めた最適なセンサー選定。', action: 'inst_flow_level'},
+                    {title:'制御弁選定', desc:'Cv値計算、キャビテーション・フラッシングの検証を行い、トリム形状を決定。', action: 'inst_control_valve'},
+                    {title:'安全弁・破裂板選定', desc:'火災や閉塞時の吹き出し量を計算し、法規に基づき安全弁のサイズを決定。', action: 'inst_psv'},
+                    {title:'分析計・特殊計器', desc:'pH、ガスクロ、水分計などのプロセス分析計や、サンプリングシステムの設計。', action: 'inst_analyzer'},
+                    {title:'DCS/SISシステム構成', desc:'コントローラーの冗長化構成、I/O点数、HMI画面設計などシステムアーキテクチャを構築。', action: 'inst_system_arch'},
+                    {title:'ループ図・結線図', desc:'センサーからジャンクションボックス、マーシャリング盤を経てDCSに至る信号経路を図式化。', action: 'inst_loop_wiring'},
+                    {title:'フックアップ・取付設計', desc:'導圧管の勾配、保温（トレース）、マニホールド弁の配置など、現場取付詳細を設計。', action: 'inst_hookup'}
+                ]
+            },
+            'safety': {
+                title: '08. 防災設計',
+                icon: 'fa-fire-extinguisher',
+                color: 'brand-accent',
+                desc: '人命を守る最後の砦。万が一の火災やガス漏洩に備え、検知・警報・消火システムを法令に基づき設計します。',
+                steps: [
+                    {title:'防災設備配置計画', desc:'消火栓、モニターノズル、スプリンクラー等の配置を決定。'},
+                    {title:'消火配管網水理計算', desc:'火災時に必要な消火水圧・流量が確保できるか、配管網の圧力損失を計算。'},
+                    {title:'ガス・火災検知器配置', desc:'ガス漏れや炎を早期に発見するための検知器（Detector）の最適配置。'},
+                    {title:'消防・保安許認可', desc:'消防法や高圧ガス保安法に基づく届出図書の作成と官庁協議。'}
+                ]
+            }
+        };
+
+        const procurementDetails = {
+            'sourcing_strategy': {
+                title: '01. ベンダー開拓・選定 (Sourcing)',
+                icon: 'fa-magnifying-glass-chart',
+                color: 'brand-accent',
+                desc: 'プロジェクトの成否はパートナー選びから。市場調査を行い、技術力・品質・財務状況を審査して信頼できるベンダーを選抜します。',
+                steps: [
+                    {title:'市場調査 (Market Survey)', desc:'プロジェクトの要求を満たせる候補企業を世界中からリストアップ。'},
+                    {title:'事前資格審査 (PQ)', desc:'Prequalification。技術力、製造能力、財務状況を詳細に審査。'},
+                    {title:'入札戦略立案', desc:'競争原理を働かせつつ、品質を担保するための発注パッケージ区分を検討。'},
+                    {title:'承認ベンダーリスト (AVL)', desc:'Approved Vendor List。発注可能なメーカーリストを顧客と合意。'}
+                ]
+            },
+            'inquiry_order': {
+                title: '02. 引合・契約 (Contracting)',
+                icon: 'fa-file-signature',
+                color: 'brand-accent',
+                desc: '技術仕様と商務条件を提示して見積を依頼。技術査定(TBE)と価格交渉を経て、最適な1社に発注します。',
+                steps: [
+                    {title:'見積依頼 (Issue RFQ)', desc:'Request For Quotation。技術仕様書と契約条件案をベンダーへ送付。'},
+                    {title:'技術・商務査定 (TBE/CBE)', desc:'各社の提案内容を横並びで比較評価。技術的な不適合がないか厳しくチェック。'},
+                    {title:'最終交渉 (Negotiation)', desc:'価格、納期、免責事項などの最終条件を詰めるタフな交渉。'},
+                    {title:'発注書発行 (Issue PO)', desc:'Purchase Order。契約成立。正式にメーカーへの製造指示が出されます。'}
+                ]
+            },
+            'expediting_qa': {
+                title: '03. 工程・品質管理 (Expediting & QA/QC)',
+                icon: 'fa-list-check',
+                color: 'brand-accent',
+                desc: '発注後が本番。製造工程を監視し、承認図書のやり取りや工場立会検査(FAT)を通じて品質と納期を守り抜きます。',
+                steps: [
+                    {title:'キックオフ会議 (KOM)', desc:'製造開始前に仕様やスケジュールの認識合わせを行う重要会議。'},
+                    {title:'図書承認 (Doc Approval)', desc:'製作図面や要領書をエンジニアがチェック。承認なしに製造は進められない。'},
+                    {title:'中間検査・工程確認', desc:'製造進捗のモニタリング(Expediting)と、主要工程での立会検査。'},
+                    {title:'出荷前検査 (Final Inspection)', desc:'完成品の性能・寸法が仕様通りかを確認する最終関門。'}
+                ]
+            },
+            'export_logistics': {
+                title: '04. 輸出・現地輸送 (Export & Logistics)',
+                icon: 'fa-ship',
+                color: 'brand-accent',
+                desc: '国境を越えて現場へ。インコタームズに基づく責任範囲の管理、輸出梱包、通関、船積み、そして現地への内陸輸送まで。',
+                steps: [
+                    {title:'船積書類作成', desc:'インボイス、パッキングリスト、原産地証明書など、通関に必要な書類を準備。'},
+                    {title:'輸出梱包 (Packing)', desc:'長期間の海上輸送や保管に耐えうる、厳重な防錆・防水梱包。'},
+                    {title:'通関・船積 (Customs/Loading)', desc:'輸出許可を取得し、重量物船やコンテナ船へ積み込み。'},
+                    {title:'現地サイト搬入', desc:'現地港での陸揚げから、特殊トレーラー等を用いた建設現場への内陸輸送。'}
+                ]
+            }
+        };
+
+        const constructionDetails = {
+            'civil_prep': {
+                title: '01. 準備・土木工事 (Site Prep & Civil)',
+                icon: 'fa-trowel-bricks',
+                color: 'brand-brown',
+                desc: '荒野をプラント用地へ。測量、整地、地盤改良を行い、巨大な設備の荷重に耐えうる強固な杭基礎を構築します。',
+                steps: [
+                    {title:'測量・整地 (Survey & Grading)', desc:'建設用地の境界確定と、地盤高さの調整（切土・盛土）。'},
+                    {title:'杭打ち工事 (Piling)', desc:'支持層まで杭を打ち込み、建物の荷重を支える準備をします。'},
+                    {title:'基礎掘削 (Excavation)', desc:'コンクリート基礎を作るために地面を掘り下げます。'},
+                    {title:'地下配管埋設 (Underground Piping)', desc:'雨水・排水などの地下パイプを先行して敷設します。'}
+                ]
+            },
+            'building_structure': {
+                title: '02. 建築・鉄骨工事 (Building & Structure)',
+                icon: 'fa-city',
+                color: 'brand-brown',
+                desc: '地上の骨格作り。パイプラックや機器架台となる鉄骨の組立、および制御室や変電所などの建屋を建設します。',
+                steps: [
+                    {title:'鉄骨組立 (Steel Erection)', desc:'クレーンを用いて柱や梁を組み上げ、ボルトで締結します。'},
+                    {title:'建屋建築 (Building Work)', desc:'制御室や変電所の壁、屋根、内装工事を行います。'},
+                    {title:'空調・照明設備', desc:'建物内のHVAC（空調）や照明器具を取り付けます。'},
+                    {title:'仕上げ工事', desc:'塗装や床仕上げなど、最終的な見栄えを整えます。'}
+                ]
+            },
+            'installation': {
+                title: '03. 機器据付 (Equipment Installation)',
+                icon: 'fa-weight-hanging',
+                color: 'brand-brown',
+                desc: 'プラントの心臓部。数百トンのリアクターやタワー、ポンプなどの回転機をミリ単位の精度で据え付けます。',
+                steps: [
+                    {title:'搬入・開梱', desc:'重量物トレーラーで機器をサイトへ搬入し、開梱検査を行います。'},
+                    {title:'吊り上げ・据付 (Lifting)', desc:'大型クレーンを駆使して機器を基礎の上にセットします。'},
+                    {title:'レベリング・芯出し', desc:'水平度や軸芯を精密に調整し、ライナープレートで固定します。'},
+                    {title:'グラウチング (Grouting)', desc:'基礎と機器台座の隙間に無収縮モルタルを注入して一体化させます。'}
+                ]
+            },
+            'piping': {
+                title: '04. 配管工事 (Piping Work)',
+                icon: 'fa-route',
+                color: 'brand-brown',
+                desc: 'プラントの血管。数万本に及ぶパイプを溶接・接続。プレハブ化による効率化と厳格な非破壊検査(NDT)が鍵です。',
+                steps: [
+                    {title:'スプール製作 (Spool Fab)', desc:'現場近くのショップでパイプを切断・溶接し、輸送可能なサイズに加工。'},
+                    {title:'現場溶接・組立', desc:'スプールを所定の位置に吊り上げ、フランジ接続や現場溶接を実施。'},
+                    {title:'サポート取付', desc:'配管の自重や熱膨張を支えるための支持金具を取り付けます。'},
+                    {title:'非破壊検査 (NDT)', desc:'レントゲン撮影(RT)などで溶接部の欠陥有無を厳格に検査します。'}
+                ]
+            },
+            'electrical': {
+                title: '05. 電気工事 (Electrical Work)',
+                icon: 'fa-bolt',
+                color: 'brand-brown',
+                desc: '巨大なエネルギーを安全に供給・配分する。受変電からモーターへの動力供給、照明や通信まで、プラントのインフラを構築します。',
+                steps: [
+                    {title:'ケーブルトレイ・導管', desc:'電線を通すための「道」となるトレイや配管を設置します。'},
+                    {title:'動力ケーブル敷設', desc:'電気室から現場機器まで、太い動力ケーブルをウインチ等で敷設します。'},
+                    {title:'盤据付・結線', desc:'電気室内のスイッチギアやMCCを据え付け、ケーブルを端末処理して接続します。'},
+                    {title:'受電・耐圧試験', desc:'高電圧を印加して絶縁性能を確認し、受電を開始します。'}
+                ]
+            },
+            'instrumentation': {
+                title: '06. 計装工事 (Instrument Work)',
+                icon: 'fa-microchip',
+                color: 'brand-brown',
+                desc: 'プラントの神経系統。数千本の信号ケーブルを配線し、センサーと制御システムを接続して自動運転を実現します。',
+                steps: [
+                    {title:'導圧管・エア配管', desc:'計器用空気(IA)の供給ラインや、プロセス配管と計器を繋ぐ導圧管を施工。'},
+                    {title:'ケーブル敷設・結線', desc:'現場計器から計器室のDCS/PLC盤まで、数千本の信号ケーブルを敷設・接続。'},
+                    {title:'校正・ループチェック', desc:'現場から中央操作室まで信号が正しく伝送されるか、疑似信号を入れて確認。'},
+                    {title:'シーケンス試験', desc:'ポンプの自動起動や緊急遮断弁の動作など、論理回路の動作を実機で確認。'}
+                ]
+            },
+            'commissioning': {
+                title: '07. 試運転 (Commissioning)',
+                icon: 'fa-power-off',
+                color: 'brand-brown',
+                desc: '命を吹き込む最終工程。計画立案から始まり、洗浄、単体テスト、総合試験を経て、性能を証明しプラントを引き渡します。',
+                steps: [
+                    {title:'計画・準備', desc:'試運転要領書の作成、組織体制の確立、ユーティリティや原料の確保。'},
+                    {title:'ラインチェック', desc:'P&IDと現場を照合し、施工不備（パンチリスト）の摘出と是正を実施。'},
+                    {title:'フラッシング', desc:'配管内のゴミや異物を水、空気、蒸気などで完全に洗い流します。'},
+                    {title:'復旧・気密試験', desc:'洗浄のために取り外した機器を戻し、窒素ガス等で系内の漏れを確認。'},
+                    {title:'電気・計装調整', desc:'モーターの回転方向確認や、ループテストによる信号伝達の健全性を証明。'},
+                    {title:'無負荷試運転', desc:'水や空気を用いてポンプやファンを実際に回し、振動や温度をチェック。'},
+                    {title:'連動・安全試験', desc:'非常停止システムやインターロックが設計通りに作動するかを入念に確認。'},
+                    {title:'実負荷運転', desc:'実際の原料を導入して製品を製造し、品質と能力（性能）を実証。'}
+                ]
+            }
+        };
+
+        const maintenanceDetails = {
+            'operation_mgmt': {
+                title: '01. 運転管理 (Operation Management)',
+                icon: 'fa-gauge-simple-high',
+                color: 'brand-dark',
+                desc: '24時間365日の安定稼働を使命とします。DCS（分散制御システム）による中央監視と、現場オペレーターの五感を駆使したパトロールで異常を早期発見します。',
+                steps: [
+                    {title:'生産計画・調整', desc:'需要に基づき、最適な運転ロード（負荷）と製品スペックを決定します。'},
+                    {title:'DCS監視・操作', desc:'中央制御室にて、温度・圧力・流量などのプロセス変数を24時間監視制御。'},
+                    {title:'現場パトロール', desc:'五感を駆使して現場を巡視。漏れ、異音、異臭などの異常を早期に発見。'},
+                    {title:'トラブルシューティング', desc:'警報発生時や機器トラブル時に、迅速な処置を行いプロセスを安定化。'}
+                ]
+            },
+            'smart_maintenance': {
+                title: '02. スマート保安 (Smart Maintenance)',
+                icon: 'fa-robot',
+                color: 'brand-dark',
+                desc: '【最新トレンド】IoTセンサーとAI解析による予兆検知、ドローンやロボットを用いた遠隔点検など、DX技術で「壊れる前に直す」を実現します。',
+                steps: [
+                    {title:'IoTデータ収集', desc:'無線振動センサーやスマート計器から、設備の状態データをリアルタイム収集。'},
+                    {title:'AI解析・予兆検知', desc:'ビッグデータをAIが学習・解析し、人間には気づかない微細な異常予兆を検知。'},
+                    {title:'ドローン・ロボット点検', desc:'高所や危険エリアの点検にドローンや四足歩行ロボットを導入し、安全を確保。'},
+                    {title:'デジタルツイン活用', desc:'サイバー空間にプラントを再現し、シミュレーションや高度な設備管理に活用。'}
+                ]
+            },
+            'tbm_cbm': {
+                title: '03. 定期・状態基準保全 (TBM/CBM)',
+                icon: 'fa-stethoscope',
+                color: 'brand-dark',
+                desc: '従来からの確実な保全手法。時間基準(TBM)での部品交換や、振動・オイル分析などの状態基準(CBM)診断を組み合わせて信頼性を維持します。',
+                steps: [
+                    {title:'保全計画策定', desc:'設備の重要度や法的要求に基づき、年間・月間の点検整備計画を立案。'},
+                    {title:'状態監視 (PdM)', desc:'振動診断、オイル分析、サーモグラフィ等を用いて設備の健康状態を診断。'},
+                    {title:'日常・定期整備', desc:'フィルター交換、給脂、増し締めなど、基本を守るメンテナンスを実施。'},
+                    {title:'信頼性解析 (RCM)', desc:'故障データを分析し、最適な保全方式（TBM/CBM/事後保全）へ見直し。'}
+                ]
+            },
+            'shutdown': {
+                title: '04. 定期修理 (Turnaround)',
+                icon: 'fa-arrows-rotate',
+                color: 'brand-dark',
+                desc: '数年に一度、プラントを完全に停止して行う大規模メンテナンス。数千人が動員され、法的な開放検査や触媒交換、大規模な改造工事を集中的に行います。',
+                steps: [
+                    {title:'シャットダウン・無害化', desc:'プラントを停止し、配管内の可燃物や毒性ガスを完全に抜いて安全化。'},
+                    {title:'開放点検・触媒交換', desc:'反応器や塔槽類を開放し、内部検査や劣化した触媒の入れ替えを実施。'},
+                    {title:'法定検査・補修工事', desc:'高圧ガス保安法等に基づく開放検査を受検し、腐食箇所の肉盛溶接等を実施。'},
+                    {title:'気密試験・スタートアップ', desc:'復旧後の漏れがないか厳格に検査し、手順に従ってプラントを再起動。'}
+                ]
+            }
+        };
+
+        const simulationDeepDiveData = {
+            'simulation': `
+                <div class="text-center mb-12">
+                    <h1 class="text-3xl font-serif font-bold text-brand-dark mb-4">シミュレーション (H&MB)</h1>
+                    <p class="text-brand-dark/60">Heat & Material Balance Calculation</p>
+                </div>
+                <div class="grid gap-8">
+                    <section class="bg-white p-8 rounded-3xl shadow-sm border border-brand-green/10">
+                        <h2 class="text-xl font-bold text-brand-green mb-4"><i class="fa-solid fa-scale-balanced mr-2"></i>物質収支・熱収支</h2>
+                        <p class="text-sm text-brand-dark/80 leading-relaxed">
+                            Input + Generation = Output + Consumption + Accumulation。<br>
+                            定常状態シミュレーター（PRO/II, Aspen Plus等）を用いて、全ストリームの流量・組成・温度・圧力を確定させます。
+                        </p>
+                    </section>
+                    <section class="bg-white p-8 rounded-3xl shadow-sm border border-brand-accent/10">
+                        <h2 class="text-xl font-bold text-brand-accent mb-4"><i class="fa-solid fa-temperature-three-quarters mr-2"></i>熱力学モデル選定</h2>
+                        <p class="text-sm text-brand-dark/80 leading-relaxed">
+                            石油・ガス系なら状態方程式（SRK, PR）、化学品・極性物質なら活量モデル（NRTL, UNIQUAC）など、流体の性質に合った推算式を選ぶことが最重要です。
+                        </p>
+                    </section>
+                </div>
+            `,
+            'pfd': `
+                <div class="text-center mb-12">
+                    <h1 class="text-3xl font-serif font-bold text-brand-dark mb-4">PFD・UFD作成</h1>
+                    <p class="text-brand-dark/60">Process / Utility Flow Diagram</p>
+                </div>
+                <div class="grid gap-8">
+                    <section class="bg-white p-8 rounded-3xl shadow-sm border border-brand-dark/10">
+                        <h2 class="text-xl font-bold text-brand-dark mb-4"><i class="fa-solid fa-diagram-project mr-2"></i>PFD（プロセスフロー図）</h2>
+                        <p class="text-sm text-brand-dark/80 leading-relaxed">
+                            主要な機器、配管、制御弁のみを記載した図面。下部にH&MB（ヒートマスバランス）表を記載し、各ラインの運転条件（温度・圧力・流量）を定義します。これがすべての設計の源流となります。
+                        </p>
+                    </section>
+                    <section class="bg-white p-8 rounded-3xl shadow-sm border border-brand-dark/10">
+                        <h2 class="text-xl font-bold text-brand-dark mb-4"><i class="fa-solid fa-water mr-2"></i>UFD（用役フロー図）</h2>
+                        <p class="text-sm text-brand-dark/80 leading-relaxed">
+                            水、蒸気、電気、窒素、空気などのユーティリティ供給網を設計します。プロセス側が必要とする総量を積み上げ、供給能力が足りるかを検証します。
+                        </p>
+                    </section>
+                </div>
+            `,
+            'pid': `
+                <div class="text-center mb-12">
+                    <h1 class="text-3xl font-serif font-bold text-brand-dark mb-4">P&ID開発</h1>
+                    <p class="text-brand-dark/60">Piping & Instrument Diagram</p>
+                </div>
+                <div class="grid gap-8">
+                    <section class="bg-white p-8 rounded-3xl shadow-sm border border-brand-brown/10">
+                        <h2 class="text-xl font-bold text-brand-brown mb-4"><i class="fa-solid fa-sitemap mr-2"></i>配管計装線図</h2>
+                        <p class="text-sm text-brand-dark/80 leading-relaxed">
+                            プラントの「聖書」とも呼ばれる最重要図書。全ての配管、バルブ、計器、制御ループを記載します。<br>
+                            ラインサイジング（配管径決定）、材質選定、断熱の有無などもここで定義されます。
+                        </p>
+                    </section>
+                    <section class="bg-white p-8 rounded-3xl shadow-sm border border-brand-brown/10">
+                        <h2 class="text-xl font-bold text-brand-brown mb-4"><i class="fa-solid fa-list-ol mr-2"></i>ラインリスト & 計器リスト</h2>
+                        <p class="text-sm text-brand-dark/80 leading-relaxed">
+                            P&IDに記載された情報をデータベース化します。配管工事や計器購入の基礎データとなります。
+                        </p>
+                    </section>
+                </div>
+            `,
+            'equipment': `
+                <div class="text-center mb-12">
+                    <h1 class="text-3xl font-serif font-bold text-brand-dark mb-4">機器仕様決定</h1>
+                    <p class="text-brand-dark/60">Equipment Datasheet</p>
+                </div>
+                <div class="grid gap-8">
+                    <section class="bg-white p-8 rounded-3xl shadow-sm border border-brand-green/10">
+                        <h2 class="text-xl font-bold text-brand-green mb-4"><i class="fa-solid fa-file-lines mr-2"></i>プロセスデータシート</h2>
+                        <p class="text-sm text-brand-dark/80 leading-relaxed">
+                            塔槽類、熱交換器、ポンプなどの運転条件（設計圧力・温度、容量、材質など）を定義した仕様書。<br>
+                            これを基に機械設計部門が詳細な強度計算や構造設計を行います。
+                        </p>
+                    </section>
+                </div>
+            `,
+            'safety': `
+                <div class="text-center mb-12">
+                    <h1 class="text-3xl font-serif font-bold text-brand-dark mb-4">安全・防災設計</h1>
+                    <p class="text-brand-dark/60">Process Safety</p>
+                </div>
+                <div class="grid gap-8">
+                    <section class="bg-white p-8 rounded-3xl shadow-sm border border-brand-accent/10">
+                        <h2 class="text-xl font-bold text-brand-accent mb-4"><i class="fa-solid fa-user-shield mr-2"></i>HAZOPスタディ</h2>
+                        <p class="text-sm text-brand-dark/80 leading-relaxed">
+                            「もし流量がゼロになったら？」「圧力が異常上昇したら？」といった逸脱を想定し、安全性と対策を網羅的に検証する会議です。
+                        </p>
+                    </section>
+                    <section class="bg-white p-8 rounded-3xl shadow-sm border border-brand-accent/10">
+                        <h2 class="text-xl font-bold text-brand-accent mb-4"><i class="fa-solid fa-fire-extinguisher mr-2"></i>安全弁・フレア計算</h2>
+                        <p class="text-sm text-brand-dark/80 leading-relaxed">
+                            火災や停電時に発生するガスを安全に逃がすための計算。最終的な砦となる安全弁のサイズと、フレアスタックの能力を決定します。
+                        </p>
+                    </section>
+                </div>
+            `,
+            'operation': `
+                <div class="text-center mb-12">
+                    <h1 class="text-3xl font-serif font-bold text-brand-dark mb-4">運転・制御設計</h1>
+                    <p class="text-brand-dark/60">Operation & Control</p>
+                </div>
+                <div class="grid gap-8">
+                    <section class="bg-white p-8 rounded-3xl shadow-sm border border-brand-dark/10">
+                        <h2 class="text-xl font-bold text-brand-dark mb-4"><i class="fa-solid fa-gamepad mr-2"></i>制御ロジック (C&E図)</h2>
+                        <p class="text-sm text-brand-dark/80 leading-relaxed">
+                            Cause & Effect図。異常検知（Cause）に対して、システムがどう反応（Effect：バルブ遮断、ポンプ停止など）するかを定義したロジック図です。
+                        </p>
+                    </section>
+                    <section class="bg-white p-8 rounded-3xl shadow-sm border border-brand-dark/10">
+                        <h2 class="text-xl font-bold text-brand-dark mb-4"><i class="fa-solid fa-book-open mr-2"></i>運転要領書 (SOP)</h2>
+                        <p class="text-sm text-brand-dark/80 leading-relaxed">
+                            スタートアップ、通常運転、シャットダウン、緊急時の手順をマニュアル化します。
+                        </p>
+                    </section>
+                </div>
+            `
+        };
+
+        const civilDeepDiveData = {
+            'piling': `
+                <div class="text-center mb-12">
+                    <div class="inline-block p-4 rounded-full bg-brand-brown/10 text-brand-brown text-3xl mb-4">
+                        <i class="fa-solid fa-trowel-bricks"></i>
+                    </div>
+                    <h1 class="text-3xl font-serif font-bold text-brand-dark mb-4">杭基礎設計の4ステップ</h1>
+                </div>
+
+                <section class="mb-12 relative pl-8 border-l-2 border-brand-brown/20">
+                    <div class="absolute -left-3 top-0 w-6 h-6 bg-brand-brown text-white rounded-full flex items-center justify-center text-xs font-bold">1</div>
+                    <h2 class="text-xl font-bold text-brand-dark mb-4">① 地盤を知る</h2>
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-brand-brown/10">
+                        <p class="text-sm text-brand-dark/80">
+                            ボーリング調査と標準貫入試験(SPT)でN値を測定。N>50の支持層を確認。
+                        </p>
+                    </div>
+                </section>
+
+                <section class="mb-12 relative pl-8 border-l-2 border-brand-brown/20">
+                    <div class="absolute -left-3 top-0 w-6 h-6 bg-brand-brown text-white rounded-full flex items-center justify-center text-xs font-bold">2</div>
+                    <h2 class="text-xl font-bold text-brand-dark mb-4">② 建物荷重を知る</h2>
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-brand-brown/10">
+                        <p class="text-sm text-brand-dark/80">
+                            長期荷重（固定+積載）と短期荷重（地震・風）を算出。<br>
+                            杭1本あたりの要求支持力 $$ Q_{req} = N / n $$ を求める。
+                        </p>
+                    </div>
+                </section>
+
+                <section class="mb-12 relative pl-8 border-l-2 border-brand-brown/20">
+                    <div class="absolute -left-3 top-0 w-6 h-6 bg-brand-brown text-white rounded-full flex items-center justify-center text-xs font-bold">3</div>
+                    <h2 class="text-xl font-bold text-brand-dark mb-4">③ 杭の種類を決める</h2>
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-brand-brown/10">
+                        <h3 class="font-bold text-brand-dark text-sm mb-4">4-1. 杭基礎にするか？</h3>
+                        <p class="text-xs mb-4">$$ N/A \\le q_a $$ なら直接基礎。満たさなければ杭。</p>
+
+                        <h3 class="font-bold text-brand-dark text-sm mb-4">4-2. 種類の選定</h3>
+                        <div class="grid md:grid-cols-2 gap-4 text-xs">
+                            <div>
+                                <h4 class="font-bold text-brand-green">支持機構</h4>
+                                <ul class="list-disc list-inside">
+                                    <li>先端支持杭</li>
+                                    <li>摩擦杭</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-brand-accent">材料</h4>
+                                <ul class="list-disc list-inside">
+                                    <li>PHC (既製コンクリ)</li>
+                                    <li>鋼管杭</li>
+                                    <li>場所打ち杭</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="mb-12 relative pl-8">
+                    <div class="absolute -left-3 top-0 w-6 h-6 bg-brand-brown text-white rounded-full flex items-center justify-center text-xs font-bold">4</div>
+                    <h2 class="text-xl font-bold text-brand-dark mb-4">④ 支持力の計算と検証</h2>
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-brand-green/10">
+                        <div class="bg-brand-green/5 p-4 rounded-xl mb-6 border border-brand-green/10">
+                            <h4 class="font-bold text-brand-green text-sm mb-2">基本式</h4>
+                            <div class="text-center text-lg font-serif text-brand-dark/90 mb-2">
+                                $$ Q_{allow} = q_{b,allow} A_p + \\sum f_{s,allow,i} A_{s,i} $$
+                            </div>
+                            <p class="text-xs text-gray-500 text-center">先端支持力 + 周面摩擦力</p>
+                        </div>
+
+                        <div class="bg-brand-dark text-white p-4 rounded-xl shadow-inner mb-6">
+                            <h4 class="font-bold text-sm mb-2 border-b border-white/20 pb-1">N値との関係 (イメージ)</h4>
+                            <div class="grid grid-cols-2 gap-4 text-sm">
+                                <div>先端: $$ q_b \\approx k_b N $$</div>
+                                <div>周面: $$ f_s \\approx k_s N $$</div>
+                            </div>
+                        </div>
+
+                        <div class="bg-white border-2 border-dashed border-brand-accent/50 p-4 rounded-xl text-center">
+                            <h4 class="font-bold text-brand-accent text-sm mb-2">判定</h4>
+                            <div class="flex items-center justify-center gap-4 text-sm">
+                                <div>必要力 $$ Q_{req} $$</div>
+                                <div class="font-bold text-xl">≤</div>
+                                <div>許容力 $$ Q_{allow} $$</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            `
+        };
+
+        const layoutDeepDiveData = {
+            'zoning': `
+                <div class="text-center mb-12">
+                    <h1 class="text-3xl font-serif font-bold text-brand-dark mb-4">全体配置計画 (Zoning)</h1>
+                    <p class="text-brand-dark/60">Safety & Efficiency First</p>
+                </div>
+                <div class="grid gap-8">
+                    <section class="bg-white p-8 rounded-3xl shadow-sm border border-brand-dark/10">
+                        <h2 class="text-xl font-bold text-brand-dark mb-4">エリア区分と安全距離</h2>
+                        <p class="text-sm text-brand-dark/80 leading-relaxed mb-4">
+                            プラントを用途ごとに明確に区分します。プロセスエリア（危険物取扱）、貯蔵エリア（タンク）、ユーティリティエリア、管理エリア（非防爆）などを設定し、それぞれの間に適切な保有空地（Safety Distance）を確保します。
+                        </p>
+                        <ul class="list-disc list-inside text-sm text-brand-dark/70 bg-brand-beige/50 p-4 rounded-lg">
+                            <li>管理棟はプロセスエリアから十分離し、万が一の爆発時も機能を維持。</li>
+                            <li>フレアスタックは卓越風の風下に配置し、輻射熱の影響を最小限に。</li>
+                        </ul>
+                    </section>
+                    <section class="bg-white p-8 rounded-3xl shadow-sm border border-brand-dark/10">
+                        <h2 class="text-xl font-bold text-brand-dark mb-4">動線計画</h2>
+                        <p class="text-sm text-brand-dark/80 leading-relaxed">
+                            大型機器の搬入ルート、メンテナンス用クレーンのアクセス道路、緊急時の避難経路、消防車の進入路を初期段階で確保します。これらが後回しになると、建設も運転も立ち行かなくなります。
+                        </p>
+                    </section>
+                </div>
+            `,
+            'plot_plan': `
+                <div class="text-center mb-12">
+                    <h1 class="text-3xl font-serif font-bold text-brand-dark mb-4">プロットプラン (Plot Plan)</h1>
+                    <p class="text-brand-dark/60">Detailed Equipment Layout</p>
+                </div>
+                <div class="grid gap-8">
+                    <section class="bg-white p-8 rounded-3xl shadow-sm border border-brand-dark/10">
+                        <h2 class="text-xl font-bold text-brand-dark mb-4">プロセスフロー順の配置</h2>
+                        <p class="text-sm text-brand-dark/80 leading-relaxed mb-4">
+                            原則としてPFD（プロセスフロー図）の流れに沿って機器を並べ、配管長を最短にします。特に高価な合金配管や大口径配管のルート短縮はコストダウンの要です。
+                        </p>
+                    </section>
+                    <section class="bg-white p-8 rounded-3xl shadow-sm border border-brand-dark/10">
+                        <h2 class="text-xl font-bold text-brand-dark mb-4">高低差と重力の活用</h2>
+                        <p class="text-sm text-brand-dark/80 leading-relaxed">
+                            液体を扱うプロセスでは重力を利用します。塔槽類を高架台に設置し、その下のポンプへ十分な吸込ヘッド（NPSH）を与える配置が鉄則です。
+                        </p>
+                    </section>
+                    <section class="bg-white p-8 rounded-3xl shadow-sm border border-brand-dark/10">
+                        <h2 class="text-xl font-bold text-brand-dark mb-4">メンテナンススペース</h2>
+                        <p class="text-sm text-brand-dark/80 leading-relaxed">
+                            熱交換器のチューブバンドル引き抜きスペースや、ポンプ分解のためのスペースを機器周囲に確保します。これが無いと、整備のたびに周囲の配管を切断する羽目になります。
+                        </p>
+                    </section>
+                </div>
+            `,
+            '3d_modeling': `
+                <div class="text-center mb-12">
+                    <h1 class="text-3xl font-serif font-bold text-brand-dark mb-4">3Dモデリング</h1>
+                    <p class="text-brand-dark/60">Virtual Plant Construction</p>
+                </div>
+                <div class="grid gap-8">
+                    <section class="bg-white p-8 rounded-3xl shadow-sm border border-brand-dark/10">
+                        <h2 class="text-xl font-bold text-brand-dark mb-4">干渉チェック (Clash Detection)</h2>
+                        <p class="text-sm text-brand-dark/80 leading-relaxed mb-4">
+                            配管、ケーブルトレイ、ダクト、鉄骨が互いにぶつかっていないかを自動検知します。現場での手戻りを防ぐ最も効果的な手段です。
+                        </p>
+                    </section>
+                    <section class="bg-white p-8 rounded-3xl shadow-sm border border-brand-dark/10">
+                        <h2 class="text-xl font-bold text-brand-dark mb-4">30% / 60% / 90% モデルレビュー</h2>
+                        <p class="text-sm text-brand-dark/80 leading-relaxed">
+                            設計進捗に合わせて定期的にレビュー会を実施します。
+                        </p>
+                        <ul class="list-disc list-inside text-sm text-brand-dark/70 bg-brand-beige/50 p-4 rounded-lg mt-2">
+                            <li><strong>30%:</strong> 主要機器配置と主配管ルートの合意。</li>
+                            <li><strong>60%:</strong> 全配管ルート、弁・計器の操作性確認。</li>
+                            <li><strong>90%:</strong> サポート、安全設備、照明など詳細の最終確認。</li>
+                        </ul>
+                    </section>
+                    <section class="bg-white p-8 rounded-3xl shadow-sm border border-brand-dark/10">
+                        <h2 class="text-xl font-bold text-brand-dark mb-4">VR / ウォークスルー</h2>
+                        <p class="text-sm text-brand-dark/80 leading-relaxed">
+                            オペレーターがVRゴーグルを装着し、仮想空間内のプラントを歩き回ります。「バルブに手が届くか」「計器が見えるか」「通路で頭をぶつけないか」を体感的に検証します。
+                        </p>
+                    </section>
+                </div>
+            `,
+            'safety_review': `
+                <div class="text-center mb-12">
+                    <h1 class="text-3xl font-serif font-bold text-brand-dark mb-4">安全性・操作性レビュー</h1>
+                    <p class="text-brand-dark/60">Safety & Operability Review</p>
+                </div>
+                <div class="grid gap-8">
+                    <section class="bg-white p-8 rounded-3xl shadow-sm border border-brand-accent/10">
+                        <h2 class="text-xl font-bold text-brand-accent mb-4">VR安全性レビュー</h2>
+                        <p class="text-sm text-brand-dark/80 leading-relaxed mb-4">
+                            VRゴーグルを活用し、火災発生時の避難ルートを仮想体験します。通路幅は十分か、頭上配管に頭をぶつけないか、消火器や安全シャワーへのアクセスは容易かを検証します。
+                        </p>
+                    </section>
+                    <section class="bg-white p-8 rounded-3xl shadow-sm border border-brand-dark/10">
+                        <h2 class="text-xl font-bold text-brand-dark mb-4">操作性・メンテナンス性確認</h2>
+                        <p class="text-sm text-brand-dark/80 leading-relaxed">
+                            「回しにくいバルブはないか」「高所の計器は見上げれば読めるか」など、人間工学に基づいたチェックを行います。また、熱交換器のバンドル引き抜きやポンプの搬出入に必要な空間（メンテナンススペース）が他の配管や構造物で阻害されていないかを厳密に確認します。
+                        </p>
+                    </section>
+                </div>
+            `
+        };
+
+        const mechanicalDeepDiveData = {
+            'mech_type_selection': `
+                <div class="text-center mb-12">
+                    <h1 class="text-3xl font-serif font-bold text-brand-dark mb-4">型式選定・基本計画</h1>
+                    <p class="text-brand-dark/60">Equipment Selection Strategy</p>
+                </div>
+                <div class="grid gap-8">
+                    <section class="bg-white p-8 rounded-3xl shadow-sm border border-brand-dark/10">
+                        <h2 class="text-xl font-bold text-brand-dark mb-4">プロセスの要求に応える最適解</h2>
+                        <p class="text-sm text-brand-dark/80 leading-relaxed mb-4">
+                            「どんな流体を、どれだけの量、どの高さまで送るか？」プロセスデータに基づき、最適な機器形式を選びます。例えばポンプなら、大流量低揚程なら遠心ポンプ、定量注入なら往復動ポンプなど、特性を見極めます。
+                        </p>
+                    </section>
+                    <section class="bg-white p-8 rounded-3xl shadow-sm border border-brand-dark/10">
+                        <h2 class="text-xl font-bold text-brand-dark mb-4">ライフサイクルコストの検討</h2>
+                        <p class="text-sm text-brand-dark/80 leading-relaxed">
+                            初期導入費（CAPEX）だけでなく、運転時の電力費やメンテナンス費（OPEX）を含めたトータルコストで評価します。高効率モーターの採用や、予備機の有無もここで決定します。
+                        </p>
+                    </section>
+                </div>
+            `,
+            'mech_datasheet': `
+                <div class="text-center mb-12">
+                    <h1 class="text-3xl font-serif font-bold text-brand-dark mb-4">データシート作成</h1>
+                    <p class="text-brand-dark/60">Defining the Specs</p>
+                </div>
+                <div class="grid gap-8">
+                    <section class="bg-white p-8 rounded-3xl shadow-sm border border-brand-dark/10">
+                        <h2 class="text-xl font-bold text-brand-dark mb-4">設計条件の確定</h2>
+                        <p class="text-sm text-brand-dark/80 leading-relaxed mb-4">
+                            設計圧力、設計温度、内容物の比重・腐食性など、機器設計の根幹となる数値を確定します。特に「設計圧力」は安全弁の設定値と密接に関わるため、慎重な決定が必要です。
+                        </p>
+                    </section>
+                    <section class="bg-white p-8 rounded-3xl shadow-sm border border-brand-dark/10">
+                        <h2 class="text-xl font-bold text-brand-dark mb-4">材質選定 (Material Selection)</h2>
+                        <p class="text-sm text-brand-dark/80 leading-relaxed">
+                            流体の腐食性や温度に応じて、炭素鋼、ステンレス鋼、ハステロイ、チタンなど最適な材質を選びます。腐食代（Corrosion Allowance）の設定も重要です。
+                        </p>
+                    </section>
+                </div>
+            `,
+            'mech_calculation': `
+                <div class="text-center mb-12">
+                    <h1 class="text-3xl font-serif font-bold text-brand-dark mb-4">強度・構造計算</h1>
+                    <p class="text-brand-dark/60">Strength Calculation</p>
+                </div>
+                <div class="grid gap-8">
+                    <section class="bg-white p-8 rounded-3xl shadow-sm border border-brand-dark/10">
+                        <h2 class="text-xl font-bold text-brand-dark mb-4">規格への準拠 (ASME/JIS)</h2>
+                        <p class="text-sm text-brand-dark/80 leading-relaxed mb-4">
+                            圧力容器ならASME Section VIII Div.1、国内向けならJIS B 8265など、適用法規・規格に基づき、内圧に耐える板厚を計算します。
+                        </p>
+                    </section>
+                    <section class="bg-white p-8 rounded-3xl shadow-sm border border-brand-dark/10">
+                        <h2 class="text-xl font-bold text-brand-dark mb-4">外力に対する評価</h2>
+                        <p class="text-sm text-brand-dark/80 leading-relaxed">
+                            内圧だけでなく、巨大な台風の風荷重や、大地震の揺れ（地震荷重）に対しても倒壊しないよう、スカートやアンカーボルトの強度を確認します。
+                        </p>
+                    </section>
+                </div>
+            `,
+            'mech_requisition': `
+                <div class="text-center mb-12">
+                    <h1 class="text-3xl font-serif font-bold text-brand-dark mb-4">購入仕様書作成 (MR)</h1>
+                    <p class="text-brand-dark/60">Material Requisition</p>
+                </div>
+                <div class="grid gap-8">
+                    <section class="bg-white p-8 rounded-3xl shadow-sm border border-brand-dark/10">
+                        <h2 class="text-xl font-bold text-brand-dark mb-4">要求事項のパッケージ化</h2>
+                        <p class="text-sm text-brand-dark/80 leading-relaxed mb-4">
+                            データシートだけでなく、適用コード、検査基準、塗装仕様、梱包要領、スペアパーツリストなど、発注に必要な全ての技術文書をセットにします。
+                        </p>
+                    </section>
+                    <section class="bg-white p-8 rounded-3xl shadow-sm border border-brand-dark/10">
+                        <h2 class="text-xl font-bold text-brand-dark mb-4">供給範囲 (Scope of Supply) の明確化</h2>
+                        <p class="text-sm text-brand-dark/80 leading-relaxed">
+                            「モーターはポンプメーカー支給か？」「計器は誰が買うのか？」など、ベンダーとの責任分界点を明確にし、見積落ちや二重発注を防ぎます。
+                        </p>
+                    </section>
+                </div>
+            `,
+            'mech_tbe': `
+                <div class="text-center mb-12">
+                    <h1 class="text-3xl font-serif font-bold text-brand-dark mb-4">ベンダー技術評価 (TBE)</h1>
+                    <p class="text-brand-dark/60">Technical Bid Evaluation</p>
+                </div>
+                <div class="grid gap-8">
+                    <section class="bg-white p-8 rounded-3xl shadow-sm border border-brand-dark/10">
+                        <h2 class="text-xl font-bold text-brand-dark mb-4">技術的な「横並び」評価</h2>
+                        <p class="text-sm text-brand-dark/80 leading-relaxed mb-4">
+                            各社からの見積書は、仕様の解釈が微妙に異なることがあります。これらを同一条件（Apple to Apple）で比較できるよう、技術的な質問状（TQ）を投げて不明点をクリアにします。
+                        </p>
+                    </section>
+                    <section class="bg-white p-8 rounded-3xl shadow-sm border border-brand-dark/10">
+                        <h2 class="text-xl font-bold text-brand-dark mb-4">逸脱事項 (Deviation) の精査</h2>
+                        <p class="text-sm text-brand-dark/80 leading-relaxed">
+                            ベンダーから提示される「仕様書からの逸脱（安価な材質への変更提案など）」が、プラントの品質や寿命に影響しないか、エンジニアの目利きでジャッジします。
+                        </p>
+                    </section>
+                </div>
+            `,
+            'mech_vendor_print': `
+                <div class="text-center mb-12">
+                    <h1 class="text-3xl font-serif font-bold text-brand-dark mb-4">ベンダー図書チェック</h1>
+                    <p class="text-brand-dark/60">Vendor Print Review</p>
+                </div>
+                <div class="grid gap-8">
+                    <section class="bg-white p-8 rounded-3xl shadow-sm border border-brand-dark/10">
+                        <h2 class="text-xl font-bold text-brand-dark mb-4">詳細設計の擦り合わせ</h2>
+                        <p class="text-sm text-brand-dark/80 leading-relaxed mb-4">
+                            発注後、メーカーから提出される組立図（General Arrangement）や詳細図をチェックします。ノズルの向き、サポートの位置、銘板の内容まで、細部にわたって確認します。
+                        </p>
+                    </section>
+                    <section class="bg-white p-8 rounded-3xl shadow-sm border border-brand-dark/10">
+                        <h2 class="text-xl font-bold text-brand-dark mb-4">他部門との取り合い確認</h2>
+                        <p class="text-sm text-brand-dark/80 leading-relaxed">
+                            「配管がぶつからないか」「基礎ボルトの位置は合っているか」「電気ケーブルの引込口は正しいか」など、配管・土木・電気・計装担当者とも情報を共有し、整合性を取ります。
+                        </p>
+                    </section>
+                </div>
+            `,
+            'mech_weld_material': `
+                <div class="text-center mb-12">
+                    <h1 class="text-3xl font-serif font-bold text-brand-dark mb-4">溶接・材料管理</h1>
+                    <p class="text-brand-dark/60">Welding & Material Control</p>
+                </div>
+                <div class="grid gap-8">
+                    <section class="bg-white p-8 rounded-3xl shadow-sm border border-brand-dark/10">
+                        <h2 class="text-xl font-bold text-brand-dark mb-4">WPS / PQR の確認</h2>
+                        <p class="text-sm text-brand-dark/80 leading-relaxed mb-4">
+                            溶接施工要領書（WPS）とその裏付けとなる試験記録（PQR）を確認し、適切な溶接条件（電流、電圧、溶接棒の種類など）で製造されることを保証します。
+                        </p>
+                    </section>
+                    <section class="bg-white p-8 rounded-3xl shadow-sm border border-brand-dark/10">
+                        <h2 class="text-xl font-bold text-brand-dark mb-4">材料証明書 (Mill Sheet)</h2>
+                        <p class="text-sm text-brand-dark/80 leading-relaxed">
+                            使用される鉄板やパイプが、規格通りの化学成分・機械的強度を持っているか、製鉄所が発行する証明書（ミルシート）で確認します。
+                        </p>
+                    </section>
+                </div>
+            `,
+            'mech_inspection': `
+                <div class="text-center mb-12">
+                    <h1 class="text-3xl font-serif font-bold text-brand-dark mb-4">検査・試験対応</h1>
+                    <p class="text-brand-dark/60">Inspection & Testing</p>
+                </div>
+                <div class="grid gap-8">
+                    <section class="bg-white p-8 rounded-3xl shadow-sm border border-brand-dark/10">
+                        <h2 class="text-xl font-bold text-brand-dark mb-4">ITP (Inspection and Test Plan)</h2>
+                        <p class="text-sm text-brand-dark/80 leading-relaxed mb-4">
+                            製造工程の「どこで」「誰が」「何を」検査するかを決めた計画書です。エンジニアは重要なポイント（Hold Point）を指定し、必ず立ち会うようにします。
+                        </p>
+                    </section>
+                    <section class="bg-white p-8 rounded-3xl shadow-sm border border-brand-dark/10">
+                        <h2 class="text-xl font-bold text-brand-dark mb-4">立会検査 (Witness Inspection)</h2>
+                        <p class="text-sm text-brand-dark/80 leading-relaxed">
+                            工場に出向き、耐圧試験（水圧をかけて漏れがないか確認）や、ポンプの性能試験（流量・揚程カーブの確認）、寸法検査などに立ち会います。合格すれば、いよいよ出荷です。
+                        </p>
+                    </section>
+                </div>
+            `
+        };
+
+        const electricalDeepDiveData = {
+            'elec_load_calc': `
+                <div class="text-center mb-12">
+                    <h1 class="text-3xl font-serif font-bold text-brand-dark mb-4">電力負荷計算 (Load Calculation)</h1>
+                    <p class="text-brand-dark/60">Determining Power Requirements</p>
+                </div>
+                <div class="grid gap-8">
+                    <section class="bg-white p-8 rounded-3xl shadow-sm border border-brand-dark/10">
+                        <h2 class="text-xl font-bold text-brand-dark mb-4">総需要電力の算出</h2>
+                        <p class="text-sm text-brand-dark/80 leading-relaxed mb-4">
+                            プロセス設計から提示された全モーターリスト、照明負荷、計装用電源などを積み上げます。同時に運転率（Utilization Factor）や需要率（Demand Factor）を考慮し、過剰設備にならない現実的な最大需要電力を算出します。
+                        </p>
+                    </section>
+                    <section class="bg-white p-8 rounded-3xl shadow-sm border border-brand-dark/10">
+                        <h2 class="text-xl font-bold text-brand-dark mb-4">変圧器・発電機の容量決定</h2>
+                        <p class="text-sm text-brand-dark/80 leading-relaxed">
+                            算出した負荷に基づき、メインの変圧器や非常用発電機の容量（kVA）を決定します。将来の増設計画も見越して、ある程度の余裕（Spare Capacity）を持たせることが一般的です。
+                        </p>
+                    </section>
+                </div>
+            `,
+            'elec_sld': `
+                <div class="text-center mb-12">
+                    <h1 class="text-3xl font-serif font-bold text-brand-dark mb-4">単線結線図作成 (SLD)</h1>
+                    <p class="text-brand-dark/60">Single Line Diagram</p>
+                </div>
+                <div class="grid gap-8">
+                    <section class="bg-white p-8 rounded-3xl shadow-sm border border-brand-dark/10">
+                        <h2 class="text-xl font-bold text-brand-dark mb-4">電力システムの骨格</h2>
+                        <p class="text-sm text-brand-dark/80 leading-relaxed mb-4">
+                            受電点から各負荷まで、電気がどう流れるか一本の線で表した図面です。母線（Bus）の構成、遮断器（CB）の配置、保護リレーの方式など、電気システムの基本アーキテクチャをここで定義します。
+                        </p>
+                    </section>
+                    <section class="bg-white p-8 rounded-3xl shadow-sm border border-brand-dark/10">
+                        <h2 class="text-xl font-bold text-brand-dark mb-4">電圧区分の決定</h2>
+                        <p class="text-sm text-brand-dark/80 leading-relaxed">
+                            大型モーターは高圧（例：6.6kV）、中小型は低圧（例：440V）、照明や計装は単相（例：100V）など、効率と安全性を考慮して配電電圧を使い分けます。
+                        </p>
+                    </section>
+                </div>
+            `,
+            'elec_equipment_spec': `
+                <div class="text-center mb-12">
+                    <h1 class="text-3xl font-serif font-bold text-brand-dark mb-4">電気機器仕様決定</h1>
+                    <p class="text-brand-dark/60">Equipment Specifications</p>
+                </div>
+                <div class="grid gap-8">
+                    <section class="bg-white p-8 rounded-3xl shadow-sm border border-brand-dark/10">
+                        <h2 class="text-xl font-bold text-brand-dark mb-4">スイッチギア・MCC</h2>
+                        <p class="text-sm text-brand-dark/80 leading-relaxed mb-4">
+                            電気を配る配電盤の仕様を決めます。短絡電流に耐える遮断容量、メンテナンスのしやすさ（引出型など）、保護協調などを考慮します。MCC（Motor Control Center）はモーター制御の要です。
+                        </p>
+                    </section>
+                    <section class="bg-white p-8 rounded-3xl shadow-sm border border-brand-dark/10">
+                        <h2 class="text-xl font-bold text-brand-dark mb-4">防爆仕様 (Hazardous Area)</h2>
+                        <p class="text-sm text-brand-dark/80 leading-relaxed">
+                            可燃性ガスが存在するエリアに設置するモーターや照明は、火花を出して爆発源とならないよう、防爆構造（耐圧防爆、安全増防爆など）を選定します。
+                        </p>
+                    </section>
+                </div>
+            `,
+            'elec_layout': `
+                <div class="text-center mb-12">
+                    <h1 class="text-3xl font-serif font-bold text-brand-dark mb-4">機器配置・ルート計画</h1>
+                    <p class="text-brand-dark/60">Equipment Layout & Routing</p>
+                </div>
+                <div class="grid gap-8">
+                    <section class="bg-white p-8 rounded-3xl shadow-sm border border-brand-dark/10">
+                        <h2 class="text-xl font-bold text-brand-dark mb-4">電気室 (Substation) 設計</h2>
+                        <p class="text-sm text-brand-dark/80 leading-relaxed mb-4">
+                            盤のメンテナンススペース、ケーブル処理のためのフリーアクセスフロア、空調による発熱対策、そして将来の増設スペースを考慮して、電気室内のレイアウトを決定します。
+                        </p>
+                    </section>
+                    <section class="bg-white p-8 rounded-3xl shadow-sm border border-brand-dark/10">
+                        <h2 class="text-xl font-bold text-brand-dark mb-4">ケーブルトレイ・ダクトバンク</h2>
+                        <p class="text-sm text-brand-dark/80 leading-relaxed">
+                            現場へのケーブルルートを計画します。上空を行くケーブルトレイは他の配管との干渉を避け、地下を行くダクトバンク（埋設管路）は重機による破損リスクを考慮します。
+                        </p>
+                    </section>
+                </div>
+            `,
+            'elec_cable_schedule': `
+                <div class="text-center mb-12">
+                    <h1 class="text-3xl font-serif font-bold text-brand-dark mb-4">ケーブルスケジュール</h1>
+                    <p class="text-brand-dark/60">Cable Schedule Management</p>
+                </div>
+                <div class="grid gap-8">
+                    <section class="bg-white p-8 rounded-3xl shadow-sm border border-brand-dark/10">
+                        <h2 class="text-xl font-bold text-brand-dark mb-4">ケーブルの「戸籍」管理</h2>
+                        <p class="text-sm text-brand-dark/80 leading-relaxed mb-4">
+                            プラント内には数千〜数万本のケーブルが走ります。それぞれのケーブル番号、種類、サイズ、始点・終点、経由ルート、長さをデータベースで厳密に管理します。
+                        </p>
+                    </section>
+                    <section class="bg-white p-8 rounded-3xl shadow-sm border border-brand-dark/10">
+                        <h2 class="text-xl font-bold text-brand-dark mb-4">ケーブルサイジング</h2>
+                        <p class="text-sm text-brand-dark/80 leading-relaxed">
+                            流れる電流値だけでなく、長距離敷設による電圧降下（Voltage Drop）を計算し、末端の機器で規定電圧が確保できるよう、適切な太さのケーブルを選定します。
+                        </p>
+                    </section>
+                </div>
+            `,
+            'elec_earthing': `
+                <div class="text-center mb-12">
+                    <h1 class="text-3xl font-serif font-bold text-brand-dark mb-4">接地・防雷設計</h1>
+                    <p class="text-brand-dark/60">Earthing & Lightning Protection</p>
+                </div>
+                <div class="grid gap-8">
+                    <section class="bg-white p-8 rounded-3xl shadow-sm border border-brand-dark/10">
+                        <h2 class="text-xl font-bold text-brand-dark mb-4">接地システム (Earthing)</h2>
+                        <p class="text-sm text-brand-dark/80 leading-relaxed mb-4">
+                            漏電時の感電防止や、保護リレーの確実な動作のために、プラント全体に接地網（メッシュ接地）を張り巡らせます。土壌抵抗率に応じた接地極の設計が必要です。
+                        </p>
+                    </section>
+                    <section class="bg-white p-8 rounded-3xl shadow-sm border border-brand-dark/10">
+                        <h2 class="text-xl font-bold text-brand-dark mb-4">避雷設備 (Lightning Protection)</h2>
+                        <p class="text-sm text-brand-dark/80 leading-relaxed">
+                            高い塔やタンクへの落雷被害を防ぐため、避雷針や避雷導線を配置し、雷電流を安全に大地へ逃がすルートを確保します。
+                        </p>
+                    </section>
+                </div>
+            `,
+            'elec_lighting': `
+                <div class="text-center mb-12">
+                    <h1 class="text-3xl font-serif font-bold text-brand-dark mb-4">照明・小勢力設計</h1>
+                    <p class="text-brand-dark/60">Lighting & Small Power</p>
+                </div>
+                <div class="grid gap-8">
+                    <section class="bg-white p-8 rounded-3xl shadow-sm border border-brand-dark/10">
+                        <h2 class="text-xl font-bold text-brand-dark mb-4">照度計算と照明配置</h2>
+                        <p class="text-sm text-brand-dark/80 leading-relaxed mb-4">
+                            夜間の運転操作やメンテナンス作業が安全に行えるよう、エリアごとの必要照度（ルクス）を満たす照明配置を設計します。省エネのためのLED化や、非常用照明の確保も重要です。
+                        </p>
+                    </section>
+                    <section class="bg-white p-8 rounded-3xl shadow-sm border border-brand-dark/10">
+                        <h2 class="text-xl font-bold text-brand-dark mb-4">メンテナンス用電源</h2>
+                        <p class="text-sm text-brand-dark/80 leading-relaxed">
+                            溶接機や電動工具を使用するためのコンセント盤を、現場の適切な位置に配置します。
+                        </p>
+                    </section>
+                </div>
+            `,
+            'elec_telecom': `
+                <div class="text-center mb-12">
+                    <h1 class="text-3xl font-serif font-bold text-brand-dark mb-4">通信・保安設備設計</h1>
+                    <p class="text-brand-dark/60">Telecom & Security Systems</p>
+                </div>
+                <div class="grid gap-8">
+                    <section class="bg-white p-8 rounded-3xl shadow-sm border border-brand-dark/10">
+                        <h2 class="text-xl font-bold text-brand-dark mb-4">プラント内通信システム</h2>
+                        <p class="text-sm text-brand-dark/80 leading-relaxed mb-4">
+                            現場と制御室をつなぐページングシステム（放送設備）、内線電話、無線システムを構築し、緊急時でも確実な連絡手段を確保します。
+                        </p>
+                    </section>
+                    <section class="bg-white p-8 rounded-3xl shadow-sm border border-brand-dark/10">
+                        <h2 class="text-xl font-bold text-brand-dark mb-4">IT・セキュリティ</h2>
+                        <p class="text-sm text-brand-dark/80 leading-relaxed">
+                            社内LAN、CCTV（監視カメラ）、入退室管理システムなど、プラントのDX化やセキュリティ強化に必要なインフラを設計します。
+                        </p>
+                    </section>
+                </div>
+            `
+        };
+
+        const instrumentDeepDiveData = {
+            'inst_general_spec': `
+                <div class="text-center mb-12">
+                    <h1 class="text-3xl font-serif font-bold text-brand-dark mb-4">一般計器仕様決定</h1>
+                    <p class="text-brand-dark/60">General Instrument Specifications</p>
+                </div>
+                <div class="grid gap-8">
+                    <section class="bg-white p-8 rounded-3xl shadow-sm border border-brand-dark/10">
+                        <h2 class="text-xl font-bold text-brand-dark mb-4">設計統一基準の策定</h2>
+                        <p class="text-sm text-brand-dark/80 leading-relaxed mb-4">
+                            数千点に及ぶ計器の仕様を統一するため、標準化を行います。防爆構造（耐圧防爆 Ex d / 本質安全防爆 Ex ia）、電源電圧、信号タイプ（4-20mA HART / Fieldbus）、保護等級（IP65等）などをプロジェクト初期に定義します。
+                        </p>
+                    </section>
+                    <section class="bg-white p-8 rounded-3xl shadow-sm border border-brand-dark/10">
+                        <h2 class="text-xl font-bold text-brand-dark mb-4">環境条件への適合</h2>
+                        <p class="text-sm text-brand-dark/80 leading-relaxed">
+                            設置場所の温度、湿度、腐食性ガス有無に基づき、計器の材質や塗装仕様を決定します。寒冷地ではヒーターや保温（Winterization）が必須となります。
+                        </p>
+                    </section>
+                </div>
+            `,
+            'inst_flow_level': `
+                <div class="text-center mb-12">
+                    <h1 class="text-3xl font-serif font-bold text-brand-dark mb-4">流量・液面計選定</h1>
+                    <p class="text-brand-dark/60">Flow & Level Instrument Sizing</p>
+                </div>
+                <div class="grid gap-8">
+                    <section class="bg-white p-8 rounded-3xl shadow-sm border border-brand-dark/10">
+                        <h2 class="text-xl font-bold text-brand-dark mb-4">流量計 (Flowmeter)</h2>
+                        <p class="text-sm text-brand-dark/80 leading-relaxed mb-4">
+                            流体の種類や精度要求に合わせて選定します。オリフィス（差圧式）は安価で一般的、コリオリ式は高精度な質量流量測定が可能、電磁流量計は導電性液体に適しています。
+                        </p>
+                    </section>
+                    <section class="bg-white p-8 rounded-3xl shadow-sm border border-brand-dark/10">
+                        <h2 class="text-xl font-bold text-brand-dark mb-4">液面計 (Level Gauge/Transmitter)</h2>
+                        <p class="text-sm text-brand-dark/80 leading-relaxed">
+                            タンク内の液体レベルを測ります。差圧式（DP）、レーダー式、超音波式などから、泡立ちや密度の変化などのプロセス特性を考慮して選びます。
+                        </p>
+                    </section>
+                </div>
+            `,
+            'inst_control_valve': `
+                <div class="text-center mb-12">
+                    <h1 class="text-3xl font-serif font-bold text-brand-dark mb-4">制御弁選定</h1>
+                    <p class="text-brand-dark/60">Control Valve Sizing</p>
+                </div>
+                <div class="grid gap-8">
+                    <section class="bg-white p-8 rounded-3xl shadow-sm border border-brand-dark/10">
+                        <h2 class="text-xl font-bold text-brand-dark mb-4">Cv値計算とトリム選定</h2>
+                        <p class="text-sm text-brand-dark/80 leading-relaxed mb-4">
+                            必要な流量を流すための弁容量係数（Cv値）を計算します。また、キャビテーションやフラッシングによる壊食を防ぐため、特殊なトリム（内部部品）や硬化処理を選定します。
+                        </p>
+                    </section>
+                    <section class="bg-white p-8 rounded-3xl shadow-sm border border-brand-dark/10">
+                        <h2 class="text-xl font-bold text-brand-dark mb-4">流量特性 (Flow Characteristics)</h2>
+                        <p class="text-sm text-brand-dark/80 leading-relaxed">
+                            弁開度と流量の関係（イコールパーセント、リニアなど）をプロセスの制御性に合わせて決定します。
+                        </p>
+                    </section>
+                </div>
+            `,
+            'inst_psv': `
+                <div class="text-center mb-12">
+                    <h1 class="text-3xl font-serif font-bold text-brand-dark mb-4">安全弁・破裂板選定</h1>
+                    <p class="text-brand-dark/60">Safety Valve & Rupture Disk</p>
+                </div>
+                <div class="grid gap-8">
+                    <section class="bg-white p-8 rounded-3xl shadow-sm border border-brand-dark/10">
+                        <h2 class="text-xl font-bold text-brand-dark mb-4">吹き出し量計算 (Sizing Scenarios)</h2>
+                        <p class="text-sm text-brand-dark/80 leading-relaxed mb-4">
+                            火災、停電、バルブ閉止など、様々な危険シナリオを想定し、最も過酷な条件で必要な放出量を計算します。これに基づき、API 520/526等の規格に従ってノズルサイズを決定します。
+                        </p>
+                    </section>
+                    <section class="bg-white p-8 rounded-3xl shadow-sm border border-brand-dark/10">
+                        <h2 class="text-xl font-bold text-brand-dark mb-4">チャタリング防止</h2>
+                        <p class="text-sm text-brand-dark/80 leading-relaxed">
+                            配管の圧力損失を計算し、安全弁が安定して動作するように入口・出口配管のサイズを確認します。
+                        </p>
+                    </section>
+                </div>
+            `,
+            'inst_analyzer': `
+                <div class="text-center mb-12">
+                    <h1 class="text-3xl font-serif font-bold text-brand-dark mb-4">分析計・特殊計器</h1>
+                    <p class="text-brand-dark/60">Process Analyzers</p>
+                </div>
+                <div class="grid gap-8">
+                    <section class="bg-white p-8 rounded-3xl shadow-sm border border-brand-dark/10">
+                        <h2 class="text-xl font-bold text-brand-dark mb-4">オンライン分析計</h2>
+                        <p class="text-sm text-brand-dark/80 leading-relaxed mb-4">
+                            pH計、導電率計、ガスクロマトグラフ（GC）、水分計など、製品品質をリアルタイムで監視するための高度な計器です。
+                        </p>
+                    </section>
+                    <section class="bg-white p-8 rounded-3xl shadow-sm border border-brand-dark/10">
+                        <h2 class="text-xl font-bold text-brand-dark mb-4">サンプリングシステム</h2>
+                        <p class="text-sm text-brand-dark/80 leading-relaxed">
+                            正確な測定のためには、プロセスからサンプルを適切に採取・前処理（冷却、減圧、フィルタリング）するサンプリング装置の設計が不可欠です。
+                        </p>
+                    </section>
+                </div>
+            `,
+            'inst_system_arch': `
+                <div class="text-center mb-12">
+                    <h1 class="text-3xl font-serif font-bold text-brand-dark mb-4">DCS/SISシステム構成</h1>
+                    <p class="text-brand-dark/60">Control System Architecture</p>
+                </div>
+                <div class="grid gap-8">
+                    <section class="bg-white p-8 rounded-3xl shadow-sm border border-brand-dark/10">
+                        <h2 class="text-xl font-bold text-brand-dark mb-4">分散制御システム (DCS)</h2>
+                        <p class="text-sm text-brand-dark/80 leading-relaxed mb-4">
+                            プラント全体の頭脳。コントローラー、I/Oカード、HMI（操作画面）、エンジニアリングステーションの構成を設計します。重要部分は二重化（Redundancy）し、信頼性を高めます。
+                        </p>
+                    </section>
+                    <section class="bg-white p-8 rounded-3xl shadow-sm border border-brand-dark/10">
+                        <h2 class="text-xl font-bold text-brand-dark mb-4">安全計装システム (SIS)</h2>
+                        <p class="text-sm text-brand-dark/80 leading-relaxed">
+                            DCSとは独立して設置される緊急停止用のシステム。SIL（安全度水準）解析に基づき、必要な信頼性レベルを満たすハードウェア構成を設計します。
+                        </p>
+                    </section>
+                </div>
+            `,
+            'inst_loop_wiring': `
+                <div class="text-center mb-12">
+                    <h1 class="text-3xl font-serif font-bold text-brand-dark mb-4">ループ図・結線図</h1>
+                    <p class="text-brand-dark/60">Loop Diagrams & Wiring</p>
+                </div>
+                <div class="grid gap-8">
+                    <section class="bg-white p-8 rounded-3xl shadow-sm border border-brand-dark/10">
+                        <h2 class="text-xl font-bold text-brand-dark mb-4">信号の道筋 (Signal Path)</h2>
+                        <p class="text-sm text-brand-dark/80 leading-relaxed mb-4">
+                            センサーからジャンクションボックス、マルチケーブル、マーシャリング盤を経てDCSのI/Oカードに至るまでの一連の接続を、1つのループ（回路）ごとに図面化します。
+                        </p>
+                    </section>
+                    <section class="bg-white p-8 rounded-3xl shadow-sm border border-brand-dark/10">
+                        <h2 class="text-xl font-bold text-brand-dark mb-4">信号の種類と絶縁</h2>
+                        <p class="text-sm text-brand-dark/80 leading-relaxed">
+                            アナログ信号（4-20mA）、デジタル信号（接点）、RTD/TC（温度）など、信号種別に適したケーブルを選定し、ノイズ対策や本質安全防爆のためのアイソレーター設置を計画します。
+                        </p>
+                    </section>
+                </div>
+            `,
+            'inst_hookup': `
+                <div class="text-center mb-12">
+                    <h1 class="text-3xl font-serif font-bold text-brand-dark mb-4">フックアップ・取付設計</h1>
+                    <p class="text-brand-dark/60">Hook-up & Installation Design</p>
+                </div>
+                <div class="grid gap-8">
+                    <section class="bg-white p-8 rounded-3xl shadow-sm border border-brand-dark/10">
+                        <h2 class="text-xl font-bold text-brand-dark mb-4">プロセス接続詳細 (Hook-up)</h2>
+                        <p class="text-sm text-brand-dark/80 leading-relaxed mb-4">
+                            配管の取り出し口から計器までの導圧管（Impulse Line）のルート、材質、勾配を詳細に図示します。液溜まりやガス溜まりを防ぐ施工が重要です。
+                        </p>
+                    </section>
+                    <section class="bg-white p-8 rounded-3xl shadow-sm border border-brand-dark/10">
+                        <h2 class="text-xl font-bold text-brand-dark mb-4">トレースと保温</h2>
+                        <p class="text-sm text-brand-dark/80 leading-relaxed">
+                            寒冷地や高粘度流体の場合、導圧管内の流体が凍結・凝固しないよう、スチームトレースや電気ヒーターによる保温施工を設計します。
+                        </p>
+                    </section>
+                </div>
+            `
+        };
+
+        // --- View Logic ---
+        function renderSimGrid() {
+            const grid = document.getElementById('simulation-grid'); 
+            if(!grid) return;
+
+            const cards = [
+                { id: 'balance', title: '01. 物質収支・熱収支', desc: '「入ったものは出る」絶対法則。', icon: 'fa-scale-balanced', color: 'brand-green' },
+                { id: 'thermo', title: '02. 熱力学・相平衡', desc: '推算式の選定がシミュレーションの命。', icon: 'fa-temperature-three-quarters', color: 'brand-green' },
+                { id: 'unitop', title: '03. 反応工学・単位操作', desc: '蒸留塔や反応器のモデル化。', icon: 'fa-industry', color: 'brand-green' },
+                { id: 'flowsheet', title: '04. フローシート構築', desc: 'リサイクルループの収束テクニック。', icon: 'fa-network-wired', color: 'brand-green' }
+            ];
+
+            grid.innerHTML = cards.map(c => `
+                <div onclick="openSimulationDeepDive('${c.id}')" class="bg-white rounded-2xl overflow-hidden shadow-lg border border-${c.color}/20 cursor-pointer group hover:shadow-xl transition-all hover:-translate-y-1 relative">
+                    <div class="absolute top-3 right-3 bg-white/80 backdrop-blur px-3 py-1 rounded-full text-xs font-bold text-${c.color} shadow-sm z-10">
+                        詳細 <i class="fa-solid fa-arrow-right"></i>
+                    </div>
+                    <div class="h-40 bg-${c.color}/10 flex items-center justify-center">
+                        <i class="fa-solid ${c.icon} text-6xl text-${c.color}/30"></i>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-bold text-lg text-brand-dark mb-2">${c.title}</h3>
+                        <p class="text-sm text-brand-dark/80">${c.desc}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderGrid(type, dataObj, clickFnName) {
+            const grid = document.getElementById(`${type}-grid`); 
+            if(!grid) return;
+
+            let html = '';
+            let index = 1;
+
+            for(const key in dataObj) {
+                const item = dataObj[key];
+                html += `
+                    <div onclick="${clickFnName}('${key}')" class="bg-white/60 p-6 rounded-xl border border-${item.color}/20 hover:bg-${item.color}/5 transition-all hover:-translate-y-1 shadow-sm group cursor-pointer relative overflow-hidden h-full">
+                        <div class="absolute top-0 right-0 bg-${item.color} text-white text-[10px] px-2 py-1 rounded-bl-lg opacity-0 group-hover:opacity-100 transition-opacity">Detail</div>
+                        <div class="flex items-center gap-4 mb-4">
+                            <div class="w-12 h-12 rounded-full bg-${item.color}/10 flex items-center justify-center text-${item.color} shrink-0 group-hover:bg-${item.color} group-hover:text-white transition-colors">
+                                <span class="font-bold text-2xl">${String(index++).padStart(2,'0')}</span>
+                            </div>
+                            <h4 class="font-bold text-brand-dark flex items-center gap-2 text-2xl">
+                                <i class="fa-solid ${item.icon}"></i> ${item.title.split('. ')[1]}
+                            </h4>
+                        </div>
+                        <p class="text-lg text-brand-dark/70 leading-relaxed">${item.desc}</p>
+                    </div>
+                `;
+            }
+
+            grid.innerHTML = html;
+        }
+
+        function switchTab(tabId) {
+            ['design','procurement','construction','maintenance'].forEach(t => {
+                document.getElementById(`content-${t}`).classList.add('hidden');
+                document.getElementById(`tab-${t}`).classList.remove('tab-active','bg-brand-green','text-white');
+                document.getElementById(`tab-${t}`).classList.add('bg-white','text-brand-dark');
+            });
+
+            document.getElementById(`content-${tabId}`).classList.remove('hidden');
+            document.getElementById(`tab-${tabId}`).classList.add('tab-active','bg-brand-green','text-white');
+            document.getElementById(`tab-${tabId}`).classList.remove('bg-white');
+
+            document.querySelectorAll('[id$="-detail-container"], [id$="-deep-dive-container"]').forEach(el => el.classList.add('hidden','opacity-0','translate-x-10'));
+            document.querySelectorAll('[id$="-grid"]').forEach(el => el.classList.remove('hidden','opacity-0','-translate-x-10'));
+        }
+
+        function showDetail(type, key, dataObj) {
+            const grid = document.getElementById(`${type}-grid`);
+            const container = document.getElementById(`${type}-detail-container`);
+            const content = type==='design'
+                ? document.getElementById('detail-content')
+                : document.getElementById(`${type}-detail-content`);
+            const data = dataObj[key];
+            if(!data) return;
+
+            let stepsHtml = '';
+            data.steps.forEach((step, idx) => {
+                let extra='', clickAttr='', hint='';
+
+                if(key === 'process' && step.action) {
+                    extra='cursor-pointer hover:bg-brand-green/5 ring-2 ring-brand-green/30';
+                    clickAttr=`onclick="openSimulationDeepDive('${step.action}')"`;
+                    hint='<div class="absolute top-2 right-2 text-xs text-brand-green font-bold animate-pulse"><i class="fa-solid fa-hand-pointer"></i> Deep Dive</div>';
+                } else if (step.action === 'piling') {
+                    extra='cursor-pointer hover:bg-brand-brown/5 ring-2 ring-brand-brown/30';
+                    clickAttr=`onclick="openCivilDeepDive('${step.action}')"`; 
+                    hint='<div class="absolute top-2 right-2 text-xs text-brand-brown font-bold animate-pulse"><i class="fa-solid fa-hand-pointer"></i> Deep Dive</div>';
+                } else if (['zoning', 'plot_plan', '3d_modeling', 'safety_review'].includes(step.action)) {
+                    extra='cursor-pointer hover:bg-brand-dark/5 ring-2 ring-brand-dark/30';
+                    clickAttr=`onclick="openLayoutDeepDive('${step.action}')"`;
+                    hint='<div class="absolute top-2 right-2 text-xs text-brand-dark font-bold animate-pulse"><i class="fa-solid fa-hand-pointer"></i> Deep Dive</div>';
+                } else if (['mech_type_selection', 'mech_datasheet', 'mech_calculation', 'mech_requisition', 'mech_tbe', 'mech_vendor_print', 'mech_weld_material', 'mech_inspection'].includes(step.action)) {
+                    extra='cursor-pointer hover:bg-brand-dark/5 ring-2 ring-brand-dark/30';
+                    clickAttr=`onclick="openMechanicalDeepDive('${step.action}')"`;
+                    hint='<div class="absolute top-2 right-2 text-xs text-brand-dark font-bold animate-pulse"><i class="fa-solid fa-hand-pointer"></i> Deep Dive</div>';
+                } else if (['elec_load_calc', 'elec_sld', 'elec_equipment_spec', 'elec_layout', 'elec_cable_schedule', 'elec_earthing', 'elec_lighting', 'elec_telecom'].includes(step.action)) {
+                    extra='cursor-pointer hover:bg-brand-dark/5 ring-2 ring-brand-dark/30';
+                    clickAttr=`onclick="openElectricalDeepDive('${step.action}')"`;
+                    hint='<div class="absolute top-2 right-2 text-xs text-brand-dark font-bold animate-pulse"><i class="fa-solid fa-hand-pointer"></i> Deep Dive</div>';
+                } else if (['inst_general_spec', 'inst_flow_level', 'inst_control_valve', 'inst_psv', 'inst_analyzer', 'inst_system_arch', 'inst_loop_wiring', 'inst_hookup'].includes(step.action)) {
+                    extra='cursor-pointer hover:bg-brand-dark/5 ring-2 ring-brand-dark/30';
+                    clickAttr=`onclick="openInstrumentDeepDive('${step.action}')"`;
+                    hint='<div class="absolute top-2 right-2 text-xs text-brand-dark font-bold animate-pulse"><i class="fa-solid fa-hand-pointer"></i> Deep Dive</div>';
+                }
+
+                stepsHtml += `
+                    <div class="relative pl-16 group p-4 rounded-xl transition-all ${extra}" ${clickAttr}>
+                        ${hint}
+                        <div class="absolute left-2 top-4 w-10 h-10 rounded-full bg-brand-beige border-2 border-${data.color} flex items-center justify-center z-10 group-hover:scale-110 transition-transform shadow-sm">
+                            <span class="text-${data.color} font-bold text-sm">${String(idx+1).padStart(2,'0')}</span>
+                        </div>
+                        <div class="absolute left-7 top-14 bottom-[-16px] w-0.5 bg-${data.color}/20 last:hidden"></div>
+                        <h4 class="text-lg font-bold text-brand-dark mb-1">${step.title}</h4>
+                        <p class="text-sm text-brand-dark/70">${step.desc}</p>
+                    </div>
+                `;
+            });
+
+            // Completion Mark Logic
+            const completionMarks = {
+                'process': { label: '基本設計パッケージ完成 (FEED Issued)', desc: '全ての設計図書が整い、調達・建設フェーズへ引き渡されます。' },
+                'layout': { label: '配置確定 (Approved Plot Plan)', desc: '全てのステークホルダーの合意形成完了。土木・配管の詳細設計へ。' },
+                'mechanical': { label: '機器製作承認 (Fabrication Release)', desc: 'メーカーによる製作開始を承認。工場でのモノづくりがスタートします。' },
+                'civil': { label: '着工図書発行 (IFC Issue)', desc: 'Issued For Construction。現場での杭打ち・基礎工事が可能になります。' },
+                'piping': { label: 'アイソメ図発行 (Isometric Issue)', desc: '配管スプール製作のための詳細図面が完成。プレハブ工場へ送られます。' },
+                'electrical': { label: '受電完了 (Energization)', desc: '電気室から現場機器まで電気が通り、単体試運転が可能な状態。' },
+                'instrumentation': { label: 'ループチェック完了 (Loop Check Done)', desc: '全ての計器信号の導通が確認され、DCSでの監視操作が可能になった状態。' },
+                'instrument': { label: 'システム定義完了 (System Frozen)', desc: '制御ロジックや画面設計が確定し、DCSの製作・ソフト実装へ進みます。' },
+                'safety': { label: '消防届出完了 (Approval Granted)', desc: '所轄消防署や官庁からの許可を取得。安全なプラント建設のお墨付きを得ます。' },
+                // Procurement Completion Marks
+                'sourcing_strategy': { label: 'ベンダーリスト確定 (AVL Approved)', desc: '発注候補となるメーカーが承認され、次の引合フェーズへ進みます。' },
+                'inquiry_order': { label: '発注完了 (PO Issued)', desc: 'Purchase Order発行。正式な契約が成立し、ボールはメーカー側へ。' },
+                'expediting_qa': { label: '出荷承認 (Release Note)', desc: '全ての検査に合格し、製品の出荷が許可されます。' },
+                'export_logistics': { label: '現場搬入完了 (Site Delivery)', desc: '製品が無事に建設現場へ到着。受入検査を経て保管・据付へ。' },
+                // Construction Completion Marks
+                'civil_prep': { label: '基礎引き渡し (Handover to Mech)', desc: 'コンクリート基礎が完成し、機器や鉄骨の据付が可能になる状態。' },
+                'building_structure': { label: '棟上げ完了 (Structure Top-out)', desc: '骨組みが完成し、雨仕舞いができる状態。' },
+                'installation': { label: '据付完了 (Setting Complete)', desc: '機器が正規の位置に固定され、配管接続の準備が整った状態。' },
+                'piping': { label: '耐圧試験合格 (Hydro Test Passed)', desc: '配管システムの強度が証明され、保温・塗装へ進める状態。' },
+                'commissioning': { label: 'プラント引き渡し (Plant Handover)', desc: '性能試験に合格し、オーナーへプラントの鍵を渡す最終ゴール。' },
+                // Maintenance Completion Marks
+                'operation_mgmt': { label: '生産目標達成 (Target Achieved)', desc: '安全かつ高品質な製品を、計画通りに出荷完了。' },
+                'smart_maintenance': { label: '保全高度化 (DX Realized)', desc: 'データドリブンな意思決定により、突発故障ゼロを実現。' },
+                'tbm_cbm': { label: '設備信頼性確保 (Reliability Secured)', desc: '計画的なメンテナンスにより、高い設備稼働率を維持。' },
+                'shutdown': { label: '保安検査証受領 (Certificate Issued)', desc: '法定検査に合格し、次期定修までの連続運転許可を取得。' }
+            };
+
+            if (completionMarks[key]) {
+                const mark = completionMarks[key];
+                const color = data.color; // Use the section's color
+                stepsHtml += `
+                    <div class="relative pl-16 p-4 mt-2">
+                        <div class="absolute left-2 top-4 w-10 h-10 rounded-full bg-${color} text-white flex items-center justify-center z-10 shadow-md ring-4 ring-${color}/20">
+                            <i class="fa-solid fa-check"></i>
+                        </div>
+                        <div class="absolute left-7 top-[-16px] bottom-14 w-0.5 bg-${color}/20 border-l-2 border-dashed border-${color}/30"></div>
+                        
+                        <div class="bg-${color}/10 border border-${color}/20 p-4 rounded-xl">
+                            <h4 class="text-lg font-bold text-${color} mb-1">${mark.label}</h4>
+                            <p class="text-sm text-brand-dark/70">${mark.desc}</p>
+                        </div>
+                    </div>
+                `;
+            }
+
+            const specificContent = document.getElementById(type === 'design' ? 'detail-content' : `${type}-detail-content`);
+            specificContent.innerHTML = `
+                <div class="flex items-center gap-4 mb-8 border-b border-${data.color}/20 pb-4">
+                    <div class="w-14 h-14 rounded-full bg-${data.color} text-white flex items-center justify-center text-2xl shadow-lg">
+                        <i class="fa-solid ${data.icon}"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-serif font-bold text-brand-dark">${data.title}</h3>
+                        <p class="text-sm text-brand-dark/60">${data.desc}</p>
+                    </div>
+                </div>
+                <div class="space-y-2 pb-12">${stepsHtml}</div>
+            `;
+
+            grid.classList.add('opacity-0','-translate-x-10','hidden');
+            container.classList.remove('hidden');
+            setTimeout(() => container.classList.remove('opacity-0','translate-x-10'), 20);
+        }
+
+        // Wrappers
+        function openDesignDetail(key){ showDetail('design',key,designDetails); }
+        function openProcurementDetail(key){ showDetail('procurement',key,procurementDetails); }
+        function openConstructionDetail(key){ showDetail('construction',key,constructionDetails); }
+        function openMaintenanceDetail(key){ showDetail('maintenance',key,maintenanceDetails); }
+
+        function closeDesignDetail(){ closeDetail('design'); }
+        function closeProcurementDetail(){ closeDetail('procurement'); }
+        function closeConstructionDetail(){ closeDetail('construction'); }
+        function closeMaintenanceDetail(){ closeDetail('maintenance'); }
+
+        function closeDetail(type){
+            const grid=document.getElementById(`${type}-grid`);
+            const container=document.getElementById(`${type}-detail-container`);
+            container.classList.add('opacity-0','translate-x-10');
+            setTimeout(()=>{
+                container.classList.add('hidden');
+                grid.classList.remove('hidden','opacity-0','-translate-x-10');
+            },300);
+        }
+
+        // Deep Dive Logic
+        function openSimulationDetail(){
+            const c = document.getElementById('simulation-detail-container');
+            c.classList.remove('hidden');
+            setTimeout(()=>c.classList.remove('opacity-0','translate-x-10'),20);
+        }
+        function closeSimulationDetail(){
+            const c=document.getElementById('simulation-detail-container');
+            c.classList.add('opacity-0','translate-x-10');
+            setTimeout(()=>c.classList.add('hidden'),300);
+        }
+
+        function openSimulationDeepDive(key){
+            const c=document.getElementById('simulation-deep-dive-container');
+            const content=document.getElementById('simulation-deep-dive-content');
+            if(simulationDeepDiveData[key]){
+                content.innerHTML=simulationDeepDiveData[key];
+                c.classList.remove('hidden');
+                setTimeout(()=>c.classList.remove('opacity-0','translate-x-10'),20);
+            }
+        }
+        function closeSimulationDeepDive(){
+            const c=document.getElementById('simulation-deep-dive-container');
+            c.classList.add('opacity-0','translate-x-10');
+            setTimeout(()=>c.classList.add('hidden'),300);
+        }
+
+        function openCivilDeepDive(key){
+            const c=document.getElementById('civil-deep-dive-container');
+            const content=document.getElementById('civil-deep-dive-content');
+            if(civilDeepDiveData[key]){
+                content.innerHTML=civilDeepDiveData[key];
+                if(window.MathJax) MathJax.typesetPromise([content]).catch((err)=>console.log(err));
+                c.classList.remove('hidden');
+                setTimeout(()=>c.classList.remove('opacity-0','translate-x-10'),20);
+            }
+        }
+        function closeCivilDeepDive(){
+            const c=document.getElementById('civil-deep-dive-container');
+            c.classList.add('opacity-0','translate-x-10');
+            setTimeout(()=>c.classList.add('hidden'),300);
+        }
+
+        function openLayoutDeepDive(key){
+            const c=document.getElementById('layout-deep-dive-container');
+            const content=document.getElementById('layout-deep-dive-content');
+            if(layoutDeepDiveData[key]){
+                content.innerHTML=layoutDeepDiveData[key];
+                c.classList.remove('hidden');
+                setTimeout(()=>c.classList.remove('opacity-0','translate-x-10'),20);
+            }
+        }
+        function closeLayoutDeepDive(){
+            const c=document.getElementById('layout-deep-dive-container');
+            c.classList.add('opacity-0','translate-x-10');
+            setTimeout(()=>c.classList.add('hidden'),300);
+        }
+
+        function openMechanicalDeepDive(key){
+            const c=document.getElementById('mechanical-deep-dive-container');
+            const content=document.getElementById('mechanical-deep-dive-content');
+            if(mechanicalDeepDiveData[key]){
+                content.innerHTML=mechanicalDeepDiveData[key];
+                c.classList.remove('hidden');
+                setTimeout(()=>c.classList.remove('opacity-0','translate-x-10'),20);
+            }
+        }
+        function closeMechanicalDeepDive(){
+            const c=document.getElementById('mechanical-deep-dive-container');
+            c.classList.add('opacity-0','translate-x-10');
+            setTimeout(()=>c.classList.add('hidden'),300);
+        }
+
+        function openElectricalDeepDive(key){
+            const c=document.getElementById('electrical-deep-dive-container');
+            const content=document.getElementById('electrical-deep-dive-content');
+            if(electricalDeepDiveData[key]){
+                content.innerHTML=electricalDeepDiveData[key];
+                c.classList.remove('hidden');
+                setTimeout(()=>c.classList.remove('opacity-0','translate-x-10'),20);
+            }
+        }
+        function closeElectricalDeepDive(){
+            const c=document.getElementById('electrical-deep-dive-container');
+            c.classList.add('opacity-0','translate-x-10');
+            setTimeout(()=>c.classList.add('hidden'),300);
+        }
+
+        function openInstrumentDeepDive(key){
+            const c=document.getElementById('instrument-deep-dive-container');
+            const content=document.getElementById('instrument-deep-dive-content');
+            if(instrumentDeepDiveData[key]){
+                content.innerHTML=instrumentDeepDiveData[key];
+                c.classList.remove('hidden');
+                setTimeout(()=>c.classList.remove('opacity-0','translate-x-10'),20);
+            }
+        }
+        function closeInstrumentDeepDive(){
+            const c=document.getElementById('instrument-deep-dive-container');
+            c.classList.add('opacity-0','translate-x-10');
+            setTimeout(()=>c.classList.add('hidden'),300);
+        }
+
+        function toggleMobileMenu(){
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        }
+
+        window.addEventListener('scroll', function(){
+            const nav=document.getElementById('navbar');
+            if(window.scrollY>50){
+                nav.classList.add('py-2');
+                nav.classList.remove('py-4');
+            } else {
+                nav.classList.add('py-4');
+                nav.classList.remove('py-2');
+            }
+        });
+        
+        // API & AI
+        const apiKey = "";
+        const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+
+        async function callGeminiAPI(p, s) {
+            try {
+                const res = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: p }] }],
+                        systemInstruction: { parts: [{ text: s }] }
+                    })
+                });
+                const d = await res.json();
+                return d.candidates[0].content.parts[0].text;
+            } catch (e) {
+                return "Error: APIキーが設定されていないか、通信エラーが発生しました。";
+            }
+        }
+
+        async function explainTerm() {
+            const t = document.getElementById('term-input').value;
+            if(!t) return;
+            const r = document.getElementById('term-result');
+            r.classList.remove('hidden');
+            r.innerHTML = '考え中...';
+            r.innerHTML = marked.parse(await callGeminiAPI(`用語: ${t}`, "簡潔に解説"));
+        }
+
+        async function suggestCareer() {
+            const t = document.getElementById('career-input').value;
+            if(!t) return;
+            const r = document.getElementById('career-result');
+            r.classList.remove('hidden');
+            r.innerHTML = '診断中...';
+            r.innerHTML = marked.parse(await callGeminiAPI(`特徴: ${t}`, "適職提案"));
+        }
+
+        function showSkillInfo(el) {
+            const toast = document.getElementById('skill-toast');
+            document.getElementById('skill-toast-title').innerText = el.innerText;
+            document.getElementById('skill-toast-desc').innerText = el.getAttribute('title');
+            
+            // 表示処理
+            toast.classList.remove('hidden');
+            // 少し待ってからopacityを変更（transitionを効かせるため）
+            requestAnimationFrame(() => {
+                toast.classList.remove('translate-y-10', 'opacity-0');
+            });
+
+            // 既存のタイマーがあればクリア
+            if(window.skillToastTimer) clearTimeout(window.skillToastTimer);
+
+            window.skillToastTimer = setTimeout(() => {
+                toast.classList.add('translate-y-10', 'opacity-0');
+                setTimeout(() => {
+                    toast.classList.add('hidden');
+                }, 300); // transition durationと合わせる
+            }, 3000);
+        }
+
+        function closeSkillToast() {
+            document.getElementById('skill-toast').classList.add('hidden');
+        }
+
+        function handleScrollReveal() {
+            const reveals = document.querySelectorAll('.scroll-reveal');
+            const trigger = window.innerHeight * 0.9; 
+
+            reveals.forEach(el => {
+                const rect = el.getBoundingClientRect();
+                if (rect.top < trigger) {
+                    el.classList.add('visible');
+                }
+            });
+        }
+
+        window.addEventListener('load', handleScrollReveal);
+        window.addEventListener('scroll', handleScrollReveal);
+
+        document.addEventListener('DOMContentLoaded',function(){ 
+            renderGrid('design',designDetails,'openDesignDetail'); 
+            renderGrid('procurement',procurementDetails,'openProcurementDetail'); 
+            renderGrid('construction',constructionDetails,'openConstructionDetail'); 
+            renderGrid('maintenance',maintenanceDetails,'openMaintenanceDetail'); 
+            renderSimGrid();
+        });
+    </script>
+</body>
+</html>
